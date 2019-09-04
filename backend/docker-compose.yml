@@ -1,0 +1,38 @@
+version: '3.7'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: on-failure
+    env_file:
+      - .env
+    volumes:
+      - ./:/code
+    ports:
+      - "${APP_PORT}:5000"
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:8
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    env_file:
+      - .env
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - ./volumes/mysql:/var/lib/mysql
+    ports:
+      - '${MYSQL_FORWARD_PORT}:3306'
+
+  my_redis_service:
+    image: "redis:alpine"
+    command: redis-server --requirepass 12345678
+    ports:
+      - '6379:6379'
+
