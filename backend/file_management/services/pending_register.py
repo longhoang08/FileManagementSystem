@@ -53,4 +53,4 @@ def send_confirm_email(username, email, fullname, **kwargs):
     confirm_token = encode_token(email, int(os.environ['TOKEN_UPTIME']))
     active_link = os.environ['SERVER_BASE_URL'] + 'register/confirm_email/' + confirm_token
     msg_html = email_template.gen_confirm_email_body_template(fullname, username, active_link)
-    mail_service.send_email("Login app's email confirmation", email, msg_html)
+    mail_service.send_email("uFile's email confirmation", email, msg_html)
