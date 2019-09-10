@@ -19,4 +19,8 @@ class ReqSchema:
         'token': fields.String(required=True, description='Google login token'),
     }
 
-
+    change_password_req = {
+        'email': fields.String(required=True, description='email'),
+        'current_password': fields.String(required=True, description='current password'),
+        'new_password': fields.String(required=True, description='new password')
+    }

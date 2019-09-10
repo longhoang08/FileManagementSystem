@@ -36,9 +36,7 @@ class Registers(flask_restplus.Resource):
 @ns.route('/confirm_email/<token>', methods=['GET'])
 class Confirm_email(flask_restplus.Resource):
 
-    # create new user, delete pending register request and save password to historic password
     def get(self, token):
         email = decode_token(token)
-        new_user = user.create_user_from_pending_register(email)
-        pending_register.delete_one_by_email(email)
-        return new_user.to_display_dict()
+        user = services.user.confirm_user_by_email(email)
+        return user.to_display_dict()
