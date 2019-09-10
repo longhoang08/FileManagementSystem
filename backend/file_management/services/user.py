@@ -8,7 +8,7 @@ from file_management import models as m
 from file_management import repositories
 from file_management.constant import message
 from file_management.extensions.custom_exception import MustConfirmEmailException, UserNotFoundException, \
-    UserExistsException, NotInPendingException
+    UserExistsException, NotInPendingException, NeedLoggedInException, PermissionException
 from file_management.extensions.exceptions import BadRequestException
 from file_management.helpers import validator, get_max_age
 
@@ -59,6 +59,16 @@ def create_user_from_pending_register(email):
     return create_user(username, email, fullname, password)
 
 
+# create new user, delete pending register request and save password to historic password
+def confirm_user_by_email(email):
+    new_user = create_user_from_pending_register(email)
+    repositories.pending_register.delete_one_by_email(email)
+    user_id = new_user.id
+    hash_password = new_user.password
+    repositories.password.add_new_hash_password_to_database(user_id, hash_password)
+    return new_user
+
+
 def fetch_user_status_by_email(email):
     from file_management.constant.user import Constant_user
     user = repositories.user.find_one_by_email(email)
@@ -98,3 +108,12 @@ def logout():
     resp = jsonify({'logout': True})
     unset_jwt_cookies(resp)
     return resp
+
+
+def check_permission(user_email):
+    from .token import check_jwt_token
+    jwt_email = check_jwt_token()
+    if (jwt_email == None):
+        raise NeedLoggedInException()
+    if (user_email != jwt_email):
+        raise PermissionException()

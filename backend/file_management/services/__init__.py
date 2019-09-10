@@ -10,6 +10,7 @@ from . import user
 from . import pending_register
 from . import mail_service
 from . import token
+from . import password
 
 my_mail = Mail()
 
