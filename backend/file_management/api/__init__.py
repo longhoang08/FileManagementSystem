@@ -15,7 +15,7 @@ api_bp = Blueprint('api', __name__, url_prefix='/api')
 api = Api(
     app=api_bp,
     version='1.0',
-    title='Register API',
+    title='File Management API',
     validate=False,
     # doc='' # disable Swagger UI
 )
