@@ -6,6 +6,7 @@ from flask_restplus import Api
 
 from file_management.extensions.exceptions import global_error_handler
 from .register import ns as register_ns
+from .user import ns as user_ns
 
 __author__ = 'LongHB'
 _logger = logging.getLogger(__name__)
@@ -17,7 +18,6 @@ api = Api(
     version='1.0',
     title='File Management API',
     validate=False,
-    # doc='' # disable Swagger UI
 )
 
 
@@ -28,5 +28,6 @@ def init_app(app, **kwargs):
     :return:
     """
     api.add_namespace(register_ns)
+    api.add_namespace(user_ns)
     app.register_blueprint(api_bp)
     api.error_handlers[Exception] = global_error_handler

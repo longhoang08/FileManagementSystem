@@ -4,22 +4,22 @@ import logging
 import flask_restplus
 from flask import request
 
-import file_management.models.schema
-from file_management import models
 from file_management import services
 from file_management.extensions import Namespace
 from file_management.helpers import decode_token
 from file_management.repositories import pending_register
 from file_management.services import user
 from file_management.services.pending_register import send_confirm_email
+from .schema.request import ReqSchema
+from .schema.response import ResSchema
 
 __author__ = 'LongHB'
 _logger = logging.getLogger(__name__)
 
 ns = Namespace('register', description='Register operations')
 
-_register_req = ns.model('register_req', models.schema.ReqSchema.user_req)
-_register_res = ns.model('register_res', models.schema.ResSchema.pending_register_res)
+_register_req = ns.model('register_req', ReqSchema.register_user_req)
+_register_res = ns.model('register_res', ResSchema.pending_register_res)
 
 
 @ns.route('/', methods=['GET', 'POST'])

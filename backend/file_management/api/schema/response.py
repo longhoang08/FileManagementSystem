@@ -15,12 +15,3 @@ class ResSchema:
         'email': fields.String(required=True, description="Email"),
         'fullname': fields.String(required=True, description="User full name"),
     }
-
-
-class ReqSchema:
-    user_req = {
-        'email': fields.String(required=True, description='user email address'),
-        'username': fields.String(required=True, description='user username'),
-        'fullname': fields.String(required=True, description='fullname of user'),
-        'password': fields.String(required=True, description='user password'),
-    }
