@@ -12,10 +12,6 @@ class User(db.Model, TimestampMixin):
     __tablename__ = 'users'
 
     def __init__(self, **kwargs):
-        """
-        Support direct initialization
-        :param kwargs:
-        """
         for k, v in kwargs.items():
             setattr(self, k, v)
 
@@ -31,18 +27,7 @@ class User(db.Model, TimestampMixin):
     last_login = db.Column(db.TIMESTAMP, nullable=False, default=datetime.datetime.now)
     un_block_at = db.Column(db.TIMESTAMP, nullable=True)
 
-    def get_id(self):
-        return self.id
-
-    @property
-    def is_authenticated(self):
-        return True
-
     def to_dict(self):
-        """
-        Transform user obj into dict
-        :return:
-        """
         return {
             'id': self.id,
             'username': self.username,
