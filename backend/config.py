@@ -37,7 +37,12 @@ MAIL_USE_SSL = True
 MAIL_USERNAME = os.environ['EMAIL_USER']
 MAIL_PASSWORD = os.environ['EMAIL_PASSWORD']
 
-REDIS_URL = "redis://:12345678@my_redis_service:6379/0"
+REDIS_HOST = os.environ['REDIS_HOST']
+REDIS_PASSWORD = os.environ['REDIS_PASSWORD']
+
+REDIS_URL = 'redis://:{0}@{1}:6379/0'.format(
+    REDIS_PASSWORD, REDIS_HOST
+)
 
 SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://{0}:{1}@{2}:{3}/{4}'.format(
     MYSQL_USER, MYSQL_PASSWORD, MYSQL_HOST, 3306, MYSQL_DATABASE
