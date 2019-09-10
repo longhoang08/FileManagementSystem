@@ -15,7 +15,6 @@ def send_email(subject, contact, body_message):
                   sender='viem.t.viemde@gmail.com',
                   recipients=[contact],
                   html=body_message)
-    my_mail.send(msg)
     try:
         my_mail.send(msg)
     except:
