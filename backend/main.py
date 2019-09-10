@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 
 from file_management import app
 
-__author__ = 'Kien'
+__author__ = 'LongHB'
 _logger = logging.getLogger(__name__)
 
 _DOT_ENV_PATH = os.path.join(os.path.dirname(__file__), '.env')
