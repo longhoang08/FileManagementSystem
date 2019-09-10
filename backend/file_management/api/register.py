@@ -4,7 +4,8 @@ import logging
 import flask_restplus
 from flask import request
 
-import file_management.models.schema
+import file_management.api.schema.request
+import file_management.api.schema.response
 from file_management import models
 from file_management import services
 from file_management.extensions import Namespace
@@ -18,8 +19,8 @@ _logger = logging.getLogger(__name__)
 
 ns = Namespace('register', description='Register operations')
 
-_register_req = ns.model('register_req', models.schema.ReqSchema.user_req)
-_register_res = ns.model('register_res', models.schema.ResSchema.pending_register_res)
+_register_req = ns.model('register_req', file_management.api.schema.request.ReqSchema.register_user_req)
+_register_res = ns.model('register_res', file_management.api.schema.response.ResSchema.pending_register_res)
 
 
 @ns.route('/', methods=['GET', 'POST'])
