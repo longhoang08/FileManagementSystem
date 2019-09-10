@@ -9,3 +9,14 @@ class ReqSchema:
         'fullname': fields.String(required=True, description='fullname of user'),
         'password': fields.String(required=True, description='user password'),
     }
+
+    login_req = {
+        'username': fields.String(required=True, description='username'),
+        'password': fields.String(required=True, description='password'),
+    }
+
+    login_google_req = {
+        'token': fields.String(required=True, description='Google login token'),
+    }
+
+

@@ -1,13 +1,16 @@
 # coding=utf-8
 import logging
 
+from flask import request, jsonify
+from flask_jwt_extended import create_access_token, set_access_cookies, unset_jwt_cookies
+
 from file_management import models as m
 from file_management import repositories
 from file_management.constant import message
 from file_management.extensions.custom_exception import MustConfirmEmailException, UserNotFoundException, \
     UserExistsException, NotInPendingException
 from file_management.extensions.exceptions import BadRequestException
-from file_management.helpers import validator
+from file_management.helpers import validator, get_max_age
 
 __author__ = 'LongHB'
 _logger = logging.getLogger(__name__)
@@ -56,7 +59,15 @@ def create_user_from_pending_register(email):
     return create_user(username, email, fullname, password)
 
 
-def check_username_and_password(username, password, **kwargs):
+def fetch_user_status_by_email(email):
+    from file_management.constant.user import Constant_user
+    user = repositories.user.find_one_by_email(email)
+    if (not user):
+        return Constant_user.none_user
+    return user
+
+
+def check_username_and_password(username, password):
     if (validator.validate_username(username) and
             validator.validate_password(password)):
         pending_user = repositories.pending_register.find_one_by_username(username)
@@ -71,3 +82,19 @@ def check_username_and_password(username, password, **kwargs):
         return user
     else:
         raise BadRequestException(message.INVALID_USERNAME_OR_PASSWORD)
+
+
+def login(username, password, **data):
+    user = check_username_and_password(username, password)
+    repositories.wrong_password.delete_all_wrong_password(user.id)
+    # delete all wrong password history after login completed
+    resp = jsonify(user.to_display_dict())
+    access_token = create_access_token(identity=user.email)
+    set_access_cookies(resp, access_token, max_age=get_max_age())
+    return resp
+
+
+def logout():
+    resp = jsonify({'logout': True})
+    unset_jwt_cookies(resp)
+    return resp
