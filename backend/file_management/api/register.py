@@ -27,6 +27,7 @@ class Registers(flask_restplus.Resource):
     @ns.expect(_register_req, validate=True)
     @ns.marshal_with(_register_res)
     def post(self):
+        "validate register data, add data to pending register table and send confirm email"
         data = request.args or request.json
         pending_register = services.pending_register.create_pending_register(**data)
         send_confirm_email(**data)
@@ -37,6 +38,7 @@ class Registers(flask_restplus.Resource):
 class Confirm_email(flask_restplus.Resource):
 
     def get(self, token):
+        "checking jwt token in param and add new user to user table"
         email = decode_token(token)
         user = services.user.confirm_user_by_email(email)
         return user.to_display_dict()

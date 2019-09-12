@@ -10,7 +10,7 @@ __author__ = 'longhb'
 _logger = logging.getLogger(__name__)
 
 
-def save_wrong_password(user_id):
+def save_wrong_password_to_redis(user_id):
     key = str(user_id) + '-' + str(random.randint(1000, 9999))
     now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     redis_client.set(key, now, ex=get_time_range_to_block())
