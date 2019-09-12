@@ -14,4 +14,6 @@ def gen_confirm_email_body_template(fullname, username, active_link):
                 "<p>Simply click <a href= '{}' >link</a> to verify your accout!</p>"
                 '<p>Best regards,</p>'
                 "<p>uFile team</p>")
-    return msg_html.format(fullname, username, active_link)
+    msg_html = msg_html.format(fullname, username, active_link)
+    # msg_html = msg_html.replace("'", '"')
+    return msg_html

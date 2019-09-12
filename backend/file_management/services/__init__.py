@@ -11,6 +11,7 @@ from . import pending_register
 from . import mail_service
 from . import token
 from . import password
+from . import wrong_password
 
 my_mail = Mail()
 

@@ -1,16 +1,17 @@
 # coding=utf-8
+import datetime
 import logging
 
 from flask import request, jsonify
 from flask_jwt_extended import create_access_token, set_access_cookies, unset_jwt_cookies
 
-from file_management import models as m
+from file_management import models as m, services
 from file_management import repositories
 from file_management.constant import message
 from file_management.extensions.custom_exception import MustConfirmEmailException, UserNotFoundException, \
-    UserExistsException, NotInPendingException, NeedLoggedInException, PermissionException
+    UserExistsException, NotInPendingException, NeedLoggedInException, PermissionException, BlockedException
 from file_management.extensions.exceptions import BadRequestException
-from file_management.helpers import validator, get_max_age
+from file_management.helpers import validator, get_max_age, verify_password
 
 __author__ = 'LongHB'
 _logger = logging.getLogger(__name__)
@@ -77,18 +78,27 @@ def fetch_user_status_by_email(email):
     return user
 
 
+def handle_in_active(user):
+    now = datetime.datetime.now().timestamp()
+    if (now > user.un_block_at.timestamp()):
+        repositories.user.un_block_user(user)
+    else:
+        raise BlockedException()
+
+
 def check_username_and_password(username, password):
     if (validator.validate_username(username) and
             validator.validate_password(password)):
         pending_user = repositories.pending_register.find_one_by_username(username)
         if (pending_user):
             raise MustConfirmEmailException()
-
         user = repositories.user.find_one_by_username(username)
-
         if (not user):
             raise UserNotFoundException()
-
+        if (not user.is_active):
+            services.user.handle_in_active(user)
+        if not verify_password(user.password, password):
+            services.wrong_password.handle_wrong_password(user)
         return user
     else:
         raise BadRequestException(message.INVALID_USERNAME_OR_PASSWORD)
