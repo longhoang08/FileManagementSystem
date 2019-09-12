@@ -24,6 +24,7 @@ class Change_password(flask_restplus.Resource):
     @ns.expect(_change_req, validate=True)
     @ns.marshal_with(_change_res)
     def post(self):
+        "validate user by current password and jwt token and set new password"
         data = request.args or request.json
         email = data.get('email')
         check_permission(email)

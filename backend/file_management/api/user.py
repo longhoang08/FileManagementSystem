@@ -43,6 +43,7 @@ _login_req = ns.model('login_req', ReqSchema.login_req)
 class Login(flask_restplus.Resource):
     @ns.expect(_login_req, validate=True)
     def post(self):
+        "check username and password and set jwt token to httponly cookies"
         data = request.args or request.json
         resp = services.user.login(**data)
         return resp
@@ -51,5 +52,6 @@ class Login(flask_restplus.Resource):
 @ns.route('/logout', methods=['GET', 'POST'])
 class Logout(flask_restplus.Resource):
     def post(self):
+        "remove jwt token from httponly cookies"
         resp = services.user.logout()
         return resp
