@@ -10,7 +10,7 @@ _logger = logging.getLogger(__name__)
 
 
 def handle_wrong_password(user):
-    id = user.get_id()
+    id = user.id
     num_of_wrong_passwords = repositories.wrong_password.number_of_wrong_password_by_user_id(id)
     repositories.wrong_password.save_wrong_password_to_redis(user_id=id)
     if (num_of_wrong_passwords >= 4):

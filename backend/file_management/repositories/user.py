@@ -63,7 +63,7 @@ def find_one_by_email(email):
 def block_user(user):
     user.is_active = False
     now = datetime.datetime.now()
-    now_after_block_time = now + datetime.timedelta(minutes=get_environ('BLOCK_TIME'))
+    now_after_block_time = now + datetime.timedelta(minutes=int(get_environ('BLOCK_TIME')))
     user.un_block_at = now_after_block_time
     m.db.session.commit()
     return user
