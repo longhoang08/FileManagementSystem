@@ -3,6 +3,7 @@ import logging
 import os
 
 from dotenv import load_dotenv
+from celery.schedules import crontab
 
 _DOT_ENV_PATH = os.path.join(os.path.dirname(__file__), '.env')
 load_dotenv(_DOT_ENV_PATH)
@@ -50,6 +51,20 @@ SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://{0}:{1}@{2}:{3}/{4}'.format(
 SQLALCHEMY_TRACK_MODIFICATIONS = True
 SQLALCHEMY_COMMIT_ON_TEARDOWN = True
 
+CELERY_TASK_RESULT_EXPIRES = 30
+CELERY_TIMEZONE = 'UTC'
+
+CELERY_ACCEPT_CONTENT = ['json', 'msgpack', 'yaml']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+
+CELERYBEAT_SCHEDULE = {
+    'auto-delete-log': {
+        'task': 'file_management.celery.tasks.del_old_log',
+        # Every month
+        'schedule': crontab(0, 0, day_of_month='1'),
+    }
+}
 
 def _env(name, default):
     """ Get configuration from environment in priorities:
@@ -100,3 +115,4 @@ for name in _vars:
     if not name.startswith('_') and name.isupper():
         env_var, val = _env(name, locals()[name])
         locals()[name] = val
+
