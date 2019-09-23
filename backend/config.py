@@ -61,7 +61,6 @@ CELERY_RESULT_SERIALIZER = 'json'
 CELERYBEAT_SCHEDULE = {
     'auto-delete-log': {
         'task': 'file_management.celery.tasks.del_old_log',
-        # Every month
         'schedule': crontab(0, 0, day_of_month='1'),
     }
 }
