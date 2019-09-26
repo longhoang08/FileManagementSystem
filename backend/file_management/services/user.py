@@ -2,7 +2,7 @@
 import datetime
 import logging
 
-from flask import request, jsonify
+from flask import jsonify
 from flask_jwt_extended import create_access_token, set_access_cookies, unset_jwt_cookies
 
 from file_management import models as m, services

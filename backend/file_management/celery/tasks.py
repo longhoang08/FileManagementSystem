@@ -1,5 +1,3 @@
-import os
-import time
 from celery import Celery
 
 from file_management import app

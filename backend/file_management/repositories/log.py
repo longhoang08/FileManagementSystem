@@ -1,7 +1,6 @@
 # coding=utf-8
 import datetime
 import logging
-import random
 
 _logger = logging.getLogger(__name__)
 

@@ -1,5 +1,3 @@
-import logging
-
 from file_management.models import db, TimestampMixin
 
 

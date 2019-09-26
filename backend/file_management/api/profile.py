@@ -7,16 +7,15 @@ from flask import request
 from file_management import services
 from file_management.extensions import Namespace
 from file_management.services.user import check_permission
-from .schema.response import ResSchema
-from .schema.request import ReqSchema
+from . import requests, responses
 
 __author__ = 'LongHB'
 _logger = logging.getLogger(__name__)
 
 ns = Namespace('profile', description='Profile operations')
 
-_change_req = ns.model('change_password_req', ReqSchema.change_password_req)
-_change_res = ns.model('change_password_res', ResSchema.user_res)
+_change_req = ns.model('change_password_req', requests.change_password_req)
+_change_res = ns.model('change_password_res', responses.user_res)
 
 
 @ns.route('/change_password', methods=['GET', 'POST'])

@@ -9,6 +9,7 @@ from flask_redis import FlaskRedis
 from mockredis import MockRedis
 
 from file_management.helpers.env import get_environ
+
 __author__ = 'LongHB'
 _logger = logging.getLogger(__name__)
 
