@@ -2,21 +2,19 @@
 import logging
 
 import flask_restplus
-from flask import request, jsonify
+from flask import request
 
-from file_management import services, models, repositories
+from file_management import services
 from file_management.extensions import Namespace
 from file_management.extensions.custom_exception import InvalidLoginTokenException
-from file_management.helpers import get_max_age
-from .schema.response import ResSchema
-from .schema.request import ReqSchema
+from . import responses, requests
 
 __author__ = 'longhb'
 _logger = logging.getLogger(__name__)
 
 ns = Namespace('users', description='User operations')
 
-_user_res = ns.model('user_res', ResSchema.user_res)
+_user_res = ns.model('user_res', responses.user_res)
 
 
 @ns.route('/get_status', methods=['GET'])
@@ -35,7 +33,7 @@ class UserStatus(flask_restplus.Resource):
         return user
 
 
-_login_req = ns.model('login_req', ReqSchema.login_req)
+_login_req = ns.model('login_req', requests.login_req)
 
 
 @ns.marshal_with(_user_res)

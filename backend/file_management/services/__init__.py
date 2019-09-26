@@ -12,6 +12,8 @@ from . import mail_service
 from . import token
 from . import password
 from . import wrong_password
+from . import log
+from . import notification
 
 my_mail = Mail()
 
