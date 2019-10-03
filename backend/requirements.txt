@@ -12,7 +12,7 @@ pluggy==0.6.0
 pytest-flask==0.10.0
 pytest-cov==2.6.0
 gunicorn==19.7.1
-requests==2.18.4
+requests==2.20.0
 Flask-Bcrypt==0.7.1
 faker==1.0.4
 sentry-sdk[flask]==0.7.7
