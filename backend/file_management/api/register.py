@@ -31,7 +31,6 @@ class Registers(flask_restplus.Resource):
         send_confirm_email(**data)
         return pending_register
 
-
 @ns.route('/confirm_email/<token>', methods=['GET'])
 class Confirm_email(flask_restplus.Resource):
 

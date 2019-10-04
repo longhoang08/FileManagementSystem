@@ -1,0 +1,33 @@
+# coding=utf-8
+import logging
+import os
+
+from file_management import repositories as repo
+from file_management.helpers import generate_file_id
+
+__author__ = 'Dang'
+_logger = logging.getLogger(__name__)
+
+
+def create_file_info(user_id, parent_id, file_name, file_size, **kwargs):
+    file_id = generate_file_id(user_id)
+    create_at = datetime.datetime.now()
+    modify_at = datetime.datetime.now()
+    file_info = repo.upload.save_file_info_to_database(
+        file_id = file_id,
+        file_title = file_name,
+        file_size = size,
+        created_at = create_at,
+        modified_at = create_at,
+        parent_id = parent_id,
+        user_id = user_id, 
+        **kwargs
+    ) 
+    return file_info
+
+
+# file_title': fields.String(required=True, description="File's name"),
+#     'created_at': fields.DateTime(required=True, description="Created date"),
+#     'modified_at': fields.DateTime(description="Modified date"),
+#     'parent_id': fields.String(required=False, description="Parent folder's id"),
+#     'owner': 
