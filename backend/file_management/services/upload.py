@@ -18,7 +18,6 @@ def create_file_info(user_id, parent_id, file_name, file_size, **kwargs):
         file_title = file_name,
         file_size = file_size,
         created_at = create_at,
-        modified_at = create_at,
         parent_id = parent_id,
         user_id = user_id, 
         **kwargs
