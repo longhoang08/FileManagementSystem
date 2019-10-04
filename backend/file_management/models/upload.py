@@ -13,8 +13,9 @@ class File_info(db.Model, TimestampMixin):
     file_size = db.Column(db.Integer, nullable=False)
     modified_at = db.Column(db.DateTime(False), nullable=False)
     parent_id = db.Column(db.String(100), nullable=False)
-    db.column
-    user_id = db.Column(db.Integer, db.ForeignKey('user_id'),nullable=False)
+    user_id = db.Column(db.Integer, nullable=False)
+    # db.column
+    # user_id = db.Column(db.Integer, db.ForeignKey('user_id'),nullable=False)
 
     def to_dict(self):
         return {

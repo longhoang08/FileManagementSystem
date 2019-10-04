@@ -1,7 +1,7 @@
 # coding=utf-8
 import logging
 import os
-
+import datetime
 from file_management import repositories as repo
 from file_management.helpers import generate_file_id
 
@@ -16,7 +16,7 @@ def create_file_info(user_id, parent_id, file_name, file_size, **kwargs):
     file_info = repo.upload.save_file_info_to_database(
         file_id = file_id,
         file_title = file_name,
-        file_size = size,
+        file_size = file_size,
         created_at = create_at,
         modified_at = create_at,
         parent_id = parent_id,
@@ -24,10 +24,3 @@ def create_file_info(user_id, parent_id, file_name, file_size, **kwargs):
         **kwargs
     ) 
     return file_info
-
-
-# file_title': fields.String(required=True, description="File's name"),
-#     'created_at': fields.DateTime(required=True, description="Created date"),
-#     'modified_at': fields.DateTime(description="Modified date"),
-#     'parent_id': fields.String(required=False, description="Parent folder's id"),
-#     'owner': 

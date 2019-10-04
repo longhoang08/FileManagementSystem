@@ -19,8 +19,8 @@ ns = Namespace('upload', description='Upload file')
 _upload_res = ns.model('upload_res', responses.file_uploaded_res)
 
 
-
-@ns.route('/<user_id>/<parent_id>', methods=['POST'])
+@ns.route('/', methods=['POST'])
+# @ns.route('/<user_id>/<parent_id>', methods=['POST'])
 class Upload(flask_restplus.Resource):
 
     parser = reqparse.RequestParser()
@@ -35,8 +35,14 @@ class Upload(flask_restplus.Resource):
         #will be replaced to service.elasticsearch.get_path(parent_id)
         path_upload = "fake_HDD"
         
+        user_id = request.form['user_id']
+        parent_id = request.form['parent_id']
+
+
         if not os.path.exists(path_upload):
             os.makedirs(path_upload)
+        
+
         for fi in request.files.getlist('in_files[]'):
             file_name = fi.filename
             try:
@@ -47,4 +53,5 @@ class Upload(flask_restplus.Resource):
                 raise PathUploadNotFound()
         upload_success = services.upload.create_file_info(user_id, parent_id, file_name, file_size)
         return upload_success
+
 

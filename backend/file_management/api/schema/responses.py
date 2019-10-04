@@ -32,7 +32,7 @@ file_uploaded_res = {
     'file_size': fields.Integer(required=True, description="Filesize"),
     'created_at': fields.DateTime(required=True, description="Created date"),
     'modified_at': fields.DateTime(description="Modified date"),
-    'parent_id': fields.String(required=False, description="Parent folder's id"),
+    'parent_id': fields.String(required=True, description="Parent folder's id"),
     'user_id': fields.Integer(required=True, description="Owner id")
 } 
 
