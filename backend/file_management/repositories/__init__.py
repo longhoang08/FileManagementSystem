@@ -8,3 +8,5 @@ from . import user
 from . import pending_register
 from . import password
 from . import wrong_password
+from . import log
+from . import notification

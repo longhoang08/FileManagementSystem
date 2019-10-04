@@ -9,6 +9,7 @@ from flask_redis import FlaskRedis
 from mockredis import MockRedis
 
 from file_management.helpers.env import get_environ
+
 __author__ = 'LongHB'
 _logger = logging.getLogger(__name__)
 
@@ -40,3 +41,4 @@ from .base import TimestampMixin
 from .user import User
 from .pending_register import Pending_register
 from .password import Password
+from .log import Log
