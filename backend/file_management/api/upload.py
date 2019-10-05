@@ -8,9 +8,9 @@ from flask_restplus import reqparse
 from file_management import services
 from werkzeug.datastructures import FileStorage
 from file_management.extensions import Namespace
+from file_management.constant import Namespace
 from file_management.extensions.custom_exception import PathUploadNotFound
 from . import requests, responses
-
 __author__ = 'Dang'
 _logger = logging.getLogger(__name__)
 
@@ -51,6 +51,7 @@ class Upload(flask_restplus.Resource):
                 file_size = os.stat(path_saved).st_size
             except:
                 raise PathUploadNotFound()
+        
         upload_success = services.upload.create_file_info(user_id, parent_id, file_name, file_size)
         return upload_success
 
