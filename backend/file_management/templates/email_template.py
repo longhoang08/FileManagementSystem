@@ -1,8 +1,5 @@
 # coding=utf-8
 import logging
-import os
-
-from file_management import BadRequestException
 
 __author__ = 'LongHB'
 _logger = logging.getLogger(__name__)

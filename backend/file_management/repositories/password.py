@@ -1,7 +1,7 @@
 # coding=utf-8
 import logging
 
-from file_management import models, NotFoundException
+from file_management import models
 from file_management.helpers import hash_password
 
 __author__ = 'LongHB'
