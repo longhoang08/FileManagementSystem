@@ -9,7 +9,8 @@ class Notification(db.Model, TimestampMixin):
             setattr(self, k, v)
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    user_id = db.Column(db.Integer, nullable=False, db.ForeignKey('users.id'))
+    db.column
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     message = db.Column(db.String(512), nullable=False)
 
     def to_dict(self):
