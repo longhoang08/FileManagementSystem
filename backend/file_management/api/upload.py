@@ -32,7 +32,7 @@ class Upload(flask_restplus.Resource):
     @ns.expect(parser, validate=True)
     def post(self):
 
-        #will be replaced to service.elasticsearch.get_path(parent_id)
+        # TODO will be replaced to service.elasticsearch.get_path(parent_id)
         path_upload = "fake_HDD"
         
         user_id = request.form['user_id']

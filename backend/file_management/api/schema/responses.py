@@ -31,9 +31,17 @@ file_uploaded_res = {
     'file_title': fields.String(required=True, description="File's name"),
     'file_size': fields.Integer(required=True, description="Filesize"),
     'created_at': fields.DateTime(required=True, description="Created date"),
-    'modified_at': fields.DateTime(description="Modified date"),
+    'updated_at': fields.DateTime(description="Modified date"),
     'parent_id': fields.String(required=True, description="Parent folder's id"),
-    'user_id': fields.Integer(required=True, description="Owner id")
+    'user_id': fields.Integer(required=True, description="Owner id"),
+    'mime_type' : fields.String(required=True, description="MIME Type"),
+    'starred' : fields.Boolean(required=True, description="Is starred"),
+    'trashed' : fields.Boolean(required=True, description="Is trashed"),
+    'trashed_time' : fields.DateTime(description="Trashed date"),
+    'version' :fields.Integer(required=True, description="Version"),
+    'has_thumbnail' : fields.Boolean(required=True, description="Is Has thumbnail"),
+    'thumbnail_url' : fields.String(required=True, description="Thumbnail url"),
+    'shared' : fields.Boolean(required=True, description="Is shared")
 } 
 
 

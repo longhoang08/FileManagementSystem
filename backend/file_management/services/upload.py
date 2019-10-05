@@ -3,23 +3,35 @@ import logging
 import os
 import datetime
 from file_management import repositories as repo
-from file_management.helpers import generate_file_id
+from file_management import helpers
 
 __author__ = 'Dang'
 _logger = logging.getLogger(__name__)
 
 
 def create_file_info(user_id, parent_id, file_name, file_size, **kwargs):
-    file_id = generate_file_id(user_id)
-    create_at = datetime.datetime.now()
+    file_id = helpers.generate_file_id(user_id)
     modify_at = datetime.datetime.now()
+    mime_type = helpers.get_mime_type(file_name)
+    has_thumbnail =  helpers.is_has_thumbail(file_name)
+
+    #TODO get thumnail url
+    thumbnail_url =  helpers.get_thumbnail_url(file_name)
+
+
     file_info = repo.upload.save_file_info_to_database(
         file_id = file_id,
         file_title = file_name,
         file_size = file_size,
-        created_at = create_at,
         parent_id = parent_id,
-        user_id = user_id, 
+        user_id = user_id,
+        mime_type = mime_type,
+        has_thumbnail = has_thumbnail,
+        thumbnail_url = thumbnail_url,
+        starred = False,
+        trashed = False,
+        version = 1,
+        shared = False,
         **kwargs
     ) 
     return file_info
