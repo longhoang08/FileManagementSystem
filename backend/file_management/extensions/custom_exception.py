@@ -110,3 +110,7 @@ class CannotUploadFileException(HTTPException):
 class PathUploadNotFound(HTTPException):
     def __init__(self, message=message.CANT_UPLOAD_FILE, errors=None):
         super().__init__(code=400, message=message, errors=errors, custom_code='can_not_upload_file')
+        
+class CannotDownloadFile(HTTPException):
+    def __init__(self, message=message.CANT_DOWNLOAD_FILE, errors=None):
+        super().__init__(code=400, message=message, errors=errors, custom_code='can_not_download_file')

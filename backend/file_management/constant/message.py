@@ -40,3 +40,5 @@ WELLCOME_GOOGLE_USER = "Wellcome to login app!"
 CANT_UPLOAD_AVATAR = "Can't upload your avatar. Please try again later."
 
 CANT_UPLOAD_FILE = "Can't upload your file, an error occurred. Please try again later"
+
+CANT_DOWNLOAD_FILE = "Can't download your file, an error occurred. Please try again later"
