@@ -32,6 +32,8 @@ def init_app(app, **kwargs):
     from .notification import ns as notification_ns
     from .upload import ns as upload_ns
     from .download import ns as download_ns
+    from .file import ns as file_ns
+
     api.add_namespace(register_ns)
     api.add_namespace(user_ns)
     api.add_namespace(profile_ns)
@@ -40,6 +42,8 @@ def init_app(app, **kwargs):
     api.add_namespace(upload_ns)
     api.add_namespace(download_ns)
 
+    api.add_namespace(file_ns)
+    
     app.register_blueprint(api_bp)
     
     api.error_handlers[Exception] = global_error_handler

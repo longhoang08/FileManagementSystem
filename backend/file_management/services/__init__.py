@@ -15,6 +15,8 @@ from . import wrong_password
 from . import log
 from . import notification
 from . import upload
+from . import file
+
 my_mail = Mail()
 
 

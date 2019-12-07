@@ -24,3 +24,6 @@ Flask-Mail==0.9.1
 mockredispy==2.9.3
 celery==4.3.0
 attrs==19.1.0
+elasticsearch==7.0.2
+elasticsearch-dsl==7.0.0
+sentry-sdk==0.13.5

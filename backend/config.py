@@ -41,6 +41,9 @@ MAIL_PASSWORD = os.environ['EMAIL_PASSWORD']
 REDIS_HOST = os.environ['REDIS_HOST']
 REDIS_PASSWORD = os.environ['REDIS_PASSWORD']
 
+ELASTIC_HOST = os.environ['ELASTICSEARCH_HOST']
+FILES_INDEX = os.environ['ELASTIC_FILE_INDEX']
+
 REDIS_URL = 'redis://:{0}@{1}:6379/0'.format(
     REDIS_PASSWORD, REDIS_HOST
 )
