@@ -1,7 +1,7 @@
 from . import es
-from settings import index
-from search_engine.utils import get_ancestors
-from search_engine.update import update
+from config import FILES_INDEX
+from .utils import get_ancestors
+from .update import update
 
 
 def insert(file_id, file_title, file_size, parent_id, user_id, mime_type, starred=False, created_at=None,
@@ -24,16 +24,16 @@ def insert(file_id, file_title, file_size, parent_id, user_id, mime_type, starre
         "description": ""
     }
 
-    res = es.index(index=index, body=document, id=file_id)
+    res = es.index(index=FILES_INDEX, body=document, id=file_id)
     ancestors = get_ancestors(parent_id)
 
-    if es.exists(index=index, id=parent_id):
-        parent = es.get_source(index=index, id=parent_id)
+    if es.exists(index=FILES_INDEX, id=parent_id):
+        parent = es.get_source(index=FILES_INDEX, id=parent_id)
         update(file_id=parent_id, children_id=parent['children_id'] + [file_id])
 
-    es.indices.refresh(index=index)
+    es.indices.refresh(index=FILES_INDEX)
     es.update_by_query(
-        index=index,
+        index=FILES_INDEX,
         body={
             "query": {
                 "terms": {
