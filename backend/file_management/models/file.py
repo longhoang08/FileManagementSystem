@@ -1,116 +1,88 @@
 # coding=utf-8
 import logging
 
-__author__ = 'LongHB'
+__author__ = 'jian'
 _logger = logging.getLogger(__name__)
 
-file_details = {
-    "name": {
-        "type": "text",
-        "fields": {
-            "raw": {
-                "type": "keyword"
-            }
-        }
-    },
-    "file_type": {
-        "type": "keyword"
-    },
-    "owner": {
-        "type": "keyword"
-    },
-    "star": {
-        "type": "boolean"
-    },
-    "description": {
-        "type": "text"
-    },
-    "size": {
-        "type": "integer"
-    },
-    "file_tags": {
-        "type": "nested",
-        "dynamic": "strict",
-        "properties": {
-            "tag_name": {
-                "type": "keyword"
-            }
-        }
-    },
-    "created_at": {
-        "type": "date",
-        "index": False
-    },
-    "updated_at": {
-        "type": "date",
-        "index": False
-    }
-}
+NUM_HITS = 10
 
-sharing_details = {
-    "share_mode": {
-        "type": "integer"
-    },
-    "editable": {
-        "type": "boolean"
-    },
-    "users_shared": {
-        "type": "nested",
-        "dynamic": "strict",
-        "properties": {
-            "user_id": {
-                "type": "integer",
-            }
-        }
-    }
-}
-
-url_details = {
-    "file_id": {
-        "type": "keyword"
-    },
-    "parent_id": {
-        "type": "keyword"
-    },
-    "children_id": {
-        "type": "nested",
-        "dynamic": "strict",
-        "properties": {
-            "id": {
-                "type": "integer"
-            }
-        }
-    }
-}
-
-mappings = {
-    "dynamic": "strict",
-    "properties": {
-        **file_details,
-        **sharing_details,
-        **url_details
-    }
-}
-
-settings = {
-    "index": {
-        "max_result_window": 500000,
-        "number_of_shards": "1",
+index_config = {
+    "settings": {
         "analysis": {
-            "filter": {
-                "synonym_filter": {
-                    "type": "synonym",
-                    "synonyms": []
+            "analyzer": {
+                "ngram_analyzer": {
+                    "tokenizer": "ngram_tokenizer",
+                    "filter": [
+                        "lowercase"
+                    ]
                 }
             },
-            "analyzer": {
-                "synonym_analyzer": {
-                    "filter": [
-                        "lowercase",
-                        "synonym_filter"
-                    ],
-                    "tokenizer": "standard"
+            "tokenizer": {
+                "ngram_tokenizer": {
+                    "type": "ngram",
+                    "min_gram": 3,
+                    "max_gram": 3,
+                    "token_chars": [
+                        "letter",
+                        "digit",
+                        "punctuation",
+                        "symbol"
+                    ]
                 }
+            }
+        }
+    },
+    "mappings": {
+        "dynamic": "strict",
+        "properties": {
+            "file_id": {
+                "type": "keyword"
+            },
+            "file_title": {
+                "type": "text",
+                "analyzer": "ngram_analyzer"
+            },
+            "file_type": {
+                "type": "keyword"
+            },
+            "owner": {
+                "type": "keyword"
+            },
+            "star": {
+                "type": "boolean"
+            },
+            "parent_id": {
+                "type": "keyword"
+            },
+            "share_mode": {
+                "type": "integer"
+            },
+            "editable": {
+                "type": "boolean"
+            },
+            "users_shared": {
+                "type": "keyword"
+            },
+            "children_id": {
+                "type": "keyword"
+            },
+            "size": {
+                "type": "integer"
+            },
+            "description": {
+                "type": "text",
+                "analyzer": "ngram_analyzer"
+            },
+            "file_tag": {
+                "type": "keyword"
+            },
+            "created_at": {
+                "type": "date",
+                "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis"
+            },
+            "updated_at": {
+                "type": "date",
+                "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis"
             }
         }
     }
