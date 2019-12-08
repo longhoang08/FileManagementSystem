@@ -8,20 +8,50 @@ import logging
 import flask_restplus
 from flask import request
 
-from file_management import services
+from file_management.services.file import insert, search, delete, update
 from file_management.extensions import Namespace
 
-__author__ = 'longhb'
+__author__ = 'jian'
 _logger = logging.getLogger(__name__)
-
 
 ns = Namespace('files', description='File operations')
 
-@ns.route('/allFile', methods=['GET'])
-class AllFiles(flask_restplus.Resource):
-    def get(selfs):
-        "get all file"
+
+@ns.route('/insert', methods=['POST'])
+class InsertFiles(flask_restplus.Resource):
+    def post(selfs):
         args = request.args or request.json
-        if not args: args = {}
-        files = services.file.get_all_files(args)
-        return files
+        if not args:
+            args = {}
+        res = insert.insert(**args)
+        return res
+
+
+@ns.route('/search', methods=['POST'])
+class SearchFiles(flask_restplus.Resource):
+    def post(selfs):
+        args = request.args or request.json
+        if not args:
+            args = {}
+        res = search.search(**args)
+        return res
+
+
+@ns.route('/delete', methods=['GET'])
+class DeleteFiles(flask_restplus.Resource):
+    def get(self):
+        args = request.args or request.json
+        if not args:
+            args = {}
+        res = delete.delete(**args)
+        return res
+
+
+@ns.route('/update', methods=['POST'])
+class UpdateFiles(flask_restplus.Resource):
+    def post(self):
+        args = request.args or request.json
+        if not args:
+            args = {}
+        res = update.update(**args)
+        return res
