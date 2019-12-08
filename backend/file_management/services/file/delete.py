@@ -1,16 +1,16 @@
 from . import es
-from settings import index
-from search_engine.utils import get_descendants, get_ancestors
-from search_engine.update import update
+from config import FILES_INDEX
+from .utils import get_descendants, get_ancestors
+from .update import update
 
 
 def delete(file_id):
-    file = es.get_source(index=index, id=file_id)
+    file = es.get_source(index=FILES_INDEX, id=file_id)
     descendants = get_descendants(file_id)
     ancestors = get_ancestors(file_id)
 
-    if es.exists(index=index, id=file['parent_id']):
-        parent = es.get_source(index=index, id=file['parent_id'])
+    if es.exists(index=FILES_INDEX, id=file['parent_id']):
+        parent = es.get_source(index=FILES_INDEX, id=file['parent_id'])
         children = parent['children_id']
         try:
             children.remove(file_id)
@@ -18,9 +18,9 @@ def delete(file_id):
             print('No such child!')
         update(parent['file_id'], children_id=children)
 
-    es.indices.refresh(index=index)
+    es.indices.refresh(index=FILES_INDEX)
     es.update_by_query(
-        index=index,
+        index=FILES_INDEX,
         body={
             "query": {
                 "terms": {
@@ -37,9 +37,9 @@ def delete(file_id):
         }
     )
 
-    es.indices.refresh(index=index)
+    es.indices.refresh(index=FILES_INDEX)
     es.delete_by_query(
-        index=index,
+        index=FILES_INDEX,
         body={
             "query": {
                 "terms": {
