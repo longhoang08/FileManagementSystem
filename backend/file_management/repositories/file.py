@@ -4,10 +4,10 @@ import logging
 from elasticsearch_dsl import query, Search
 
 from config import FILES_INDEX
-from file_management.models.file import mappings, settings
+from file_management.models.file import index_config
 from file_management.repositories.es_base import EsRepositoryInterface
 
-__author__ = 'LongHB'
+__author__ = 'jian'
 _logger = logging.getLogger(__name__)
 
 
@@ -15,8 +15,8 @@ class FileElasticRepo(EsRepositoryInterface):
     def __init__(self):
         super().__init__()
         self._index = FILES_INDEX
-        self.mappings = mappings
-        self.settings = settings
+        self.mappings = index_config['mappings']
+        self.settings = index_config['settings']
         self.id_key = 'file_id'
 
     def search(self, args):
