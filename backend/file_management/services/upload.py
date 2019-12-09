@@ -9,10 +9,8 @@ __author__ = 'Dang'
 _logger = logging.getLogger(__name__)
 
 
-def create_file_info(user_id, parent_id, file_name, file_size, **kwargs):
-    file_id = helpers.generate_file_id(user_id)
+def create_file_info(user_id, parent_id, file_name, file_size, file_id, mime_type, tags, **kwargs):
     modify_at = datetime.datetime.now()
-    mime_type = helpers.get_mime_type(file_name)
     has_thumbnail =  helpers.is_has_thumbail(file_name)
 
     #TODO get thumnail url
@@ -32,6 +30,7 @@ def create_file_info(user_id, parent_id, file_name, file_size, **kwargs):
         trashed = False,
         version = 1,
         shared = False,
+        tags = ','.join(tags),
         **kwargs
     ) 
     return file_info

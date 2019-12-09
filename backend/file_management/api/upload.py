@@ -10,6 +10,8 @@ from werkzeug.datastructures import FileStorage
 from file_management.extensions import Namespace
 from file_management.extensions.custom_exception import PathUploadNotFound
 from . import requests, responses
+from file_management import helpers
+
 __author__ = 'Dang'
 _logger = logging.getLogger(__name__)
 
@@ -23,7 +25,7 @@ _upload_res = ns.model('upload_res', responses.file_uploaded_res)
 class Upload(flask_restplus.Resource):
 
     parser = reqparse.RequestParser()
-    parser.add_argument('in_files', type=FileStorage, location='files')
+    parser.add_argument('in_file', type=FileStorage, location='files')
     parser.add_argument('user_id', type=int, help='user_id')
     parser.add_argument('parent_id', type=str, help='parent_id')
 
@@ -31,25 +33,36 @@ class Upload(flask_restplus.Resource):
     @ns.expect(parser, validate=True)
     def post(self):
 
-        # TODO will be replaced to service.elasticsearch.get_path(parent_id)
-        path_upload = "fake_HDD"
-        
         user_id = request.form['user_id']
         parent_id = request.form['parent_id']
 
+        # TODO will be replaced to service.elasticsearch.get_path(parent_id)
+        path_upload = "fake_HDD/hanoi2"
 
         if not os.path.exists(path_upload):
             os.makedirs(path_upload)
         
 
-        for fi in request.files.getlist('in_files[]'):
-            file_name = fi.filename
-            try:
-                path_saved = os.path.join(path_upload, file_name)
-                fi.save(path_saved)
-                file_size = os.stat(path_saved).st_size
-            except:
-                raise PathUploadNotFound()
+        fi = request.files.get('in_file')
+        file_id = helpers.generate_file_id(user_id)
+        file_name = fi.filename
+        try:
+        mime_type = helpers.get_mime_type(file_name)
         
-        upload_success = services.upload.create_file_info(user_id, parent_id, file_name, file_size)
+        try:
+            # save file on server
+            path_saved = os.path.join(path_upload, file_id)
+            fi.save(path_saved)
+
+            # get file size
+            file_size = os.stat(path_saved).st_size
+            
+            # get tags if file is an image
+            if('image' in mime_type):
+                tags = helpers.generate_image_tag(path_saved)
+                # print(tags)
+        except:
+            raise PathUploadNotFound()
+        # get response
+        upload_success = services.upload.create_file_info(user_id, parent_id, file_name, file_size, file_id, mime_type, tags)
         return upload_success

@@ -22,14 +22,13 @@ class File_info(db.Model, TimestampMixin):
     has_thumbnail = db.Column(db.Boolean, nullable=False, default=False)
     thumbnail_url = db.Column(db.String(256), nullable=True, default=link.DEFAULT_THUMBNAIL)
     shared = db.Column(db.Boolean, nullable=False, default=False)
-    
+    tags = db.Column(db.String(256), nullable=True)
+
     
     def to_dict(self):
         return {
             'file_id': self.file_id,
             'file_title': self.file_name,
-            'created_at': self.created_at,
-            'updated_at': self.updated_at,
             'file_size' : self.file_size,
             'parent_id': self.parent_id,
             'user_id' : self.user_id,
@@ -40,14 +39,14 @@ class File_info(db.Model, TimestampMixin):
             'version' : self.version,
             'has_thumbnail' : self.has_thumbnail,
             'thumbnail_url' : self.thumbnail_url,
-            'shared' : self.shared
+            'shared' : self.shared,
+            'tags': self.tags
         }
 
     def to_display_dict(self):
         return {
             'file_id': self.file_id,
             'file_title': self.file_name,
-            'created_at': self.created_at,
             'file_size' : self.file_size,
             'parent_id': self.parent_id,
             'user_id' : self.user_id,
@@ -58,5 +57,7 @@ class File_info(db.Model, TimestampMixin):
             'version' : self.version,
             'has_thumbnail' : self.has_thumbnail,
             'thumbnail_url' : self.thumbnail_url,
-            'shared' : self.shared
+            'shared' : self.shared,
+            'tags': self.tags
+
         }
