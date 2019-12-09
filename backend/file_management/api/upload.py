@@ -11,7 +11,7 @@ from file_management.extensions import Namespace
 from file_management.extensions.custom_exception import PathUploadNotFound
 from . import requests, responses
 from file_management import helpers
-
+from file_management.services.file import utils
 __author__ = 'Dang'
 _logger = logging.getLogger(__name__)
 
@@ -36,9 +36,9 @@ class Upload(flask_restplus.Resource):
         user_id = request.form['user_id']
         parent_id = request.form['parent_id']
 
-        # TODO will be replaced to service.elasticsearch.get_path(parent_id)
-        path_upload = "fake_HDD/hanoi2"
-
+    
+        path_upload = '/'.join(utils.get_ancestors(parent_id).append(parent_id))
+        # path_upload = "fake_HDD"
         if not os.path.exists(path_upload):
             os.makedirs(path_upload)
         
@@ -46,9 +46,12 @@ class Upload(flask_restplus.Resource):
         fi = request.files.get('in_file')
         file_id = helpers.generate_file_id(user_id)
         file_name = fi.filename
+        mime_type = ''
         try:
-        mime_type = helpers.get_mime_type(file_name)
-        
+            mime_type = helpers.get_mime_type(file_name)
+        except:
+            pass
+
         try:
             # save file on server
             path_saved = os.path.join(path_upload, file_id)
@@ -56,10 +59,11 @@ class Upload(flask_restplus.Resource):
 
             # get file size
             file_size = os.stat(path_saved).st_size
-            
+            tags = ['']
             # get tags if file is an image
             if('image' in mime_type):
                 tags = helpers.generate_image_tag(path_saved)
+                
                 # print(tags)
         except:
             raise PathUploadNotFound()
