@@ -1,6 +1,6 @@
 import uuid
 import mimetypes
-from file_management.constant import link
+from file_management.constant import link, pathconst
 from preview_generator.manager import PreviewManager
 def generate_file_id(user_id):
     """Generate unique file_id """
@@ -17,7 +17,7 @@ def is_has_thumbail(file_name):
     return get_mime_type(file_name) != None
 
 def gen_thumbnail(file_id, path_upload):
-    manager = PreviewManager("fake_HDD/" + path_upload, create_folder= True)
+    manager = PreviewManager(pathconst.FAKE_HDD + "/" + path_upload, create_folder= True)
     path_to_preview_image = manager.get_jpeg_preview(path_upload + '/' + file_id, height=500,width=400)
     return path_to_preview_image
     # return "path_preview"

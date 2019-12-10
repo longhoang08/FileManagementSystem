@@ -32,14 +32,11 @@ class Upload(flask_restplus.Resource):
     @ns.marshal_with(_upload_res)
     @ns.expect(parser, validate=True)
     def post(self):
-
         user_id = request.form['user_id']
         parent_id = request.form['parent_id']
-
         folders = utils.get_ancestors(parent_id)
-        folders.append(parent_id)
         path_upload = '/'.join(folders)
-        # path_upload = "fake_HDD"
+        
         if not os.path.exists(path_upload):
             os.makedirs(path_upload)
         
@@ -49,10 +46,12 @@ class Upload(flask_restplus.Resource):
         file_name = fi.filename
         path_saved = ''
         mime_type = ''
+        
         try:
             mime_type = helpers.get_mime_type(file_name)
         except:
             pass
+        
         try:
             # save file on server
             path_saved = os.path.join(path_upload, file_id)
@@ -61,6 +60,7 @@ class Upload(flask_restplus.Resource):
             # get file size
             file_size = os.stat(path_saved).st_size
             tags = ['']
+
             # get tags if file is an image
             if('image' in mime_type):
                 tags = helpers.generate_image_tag(path_saved)
