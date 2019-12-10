@@ -18,22 +18,26 @@ ns = Namespace('download', description='Download file')
 
 _download_req = ns.model('download_req', requests.download_file_req)
 
-@ns.route('/', methods=['GET'])
+@ns.route('/<user_id>/<file_id>', methods=['GET'])
 class Download(flask_restplus.Resource):
-    @ns.expect(_download_req, validate=True)
-    def get(self):
-        data = request.args or request.json
-        file_id = data['file_id']
-        
+    # @ns.expect(_download_req, validate=True)
+    def get(self, user_id, file_id):
+        # data = request.args or request.json
+        # file_id = data['file_id']
+         
         try:
-            UPLOAD_DIRECTORY = ""
+            UPLOAD_DIRECTORY = "../fake_HDD"
+            
             #file name located in server
             folders = utils.get_ancestors(file_id) 
             folders.append(file_id)
             path = '/'.join(folders)
+            # path = file_id
             #real file name user see
             true_name = repositories.download.find_file_by_file_id(file_id).file_title
+            
             return send_from_directory(UPLOAD_DIRECTORY, path, attachment_filename=true_name, as_attachment=True)
         except Exception as e:
+            return str(e)
             raise CannotDownloadFile()
        
