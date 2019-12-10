@@ -9,12 +9,12 @@ __author__ = 'Dang'
 _logger = logging.getLogger(__name__)
 
 
-def create_file_info(user_id, parent_id, file_name, file_size, file_id, mime_type, tags, **kwargs):
+def create_file_info(path_upload, user_id, parent_id, file_name, file_size, file_id, mime_type, tags, **kwargs):
     modify_at = datetime.datetime.now()
     has_thumbnail =  helpers.is_has_thumbail(file_name)
 
     #TODO get thumnail url
-    thumbnail_url =  helpers.get_thumbnail_url(file_name)
+    thumbnail_url =  helpers.get_thumbnail_url(file_id, file_name, path_upload)
 
 
     file_info = repo.upload.save_file_info_to_database(

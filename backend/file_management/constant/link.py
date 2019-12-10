@@ -1,3 +1,8 @@
 DEFAULT_AVATAR = 'http://bit.ly/defaultAvatar'
 DEFAULT_THUMBNAIL = 'http://bit.ly/defaultAvatar'
-
+ZIP_THUMBNAIL = 'http://bit.ly/defaultAvatar'
+DOCX_THUMBNAIL = 'http://bit.ly/defaultAvatar'
+PDF_THUMBNAIL = 'http://bit.ly/defaultAvatar'
+SHEET_THUMBNAIL = 'http://bit.ly/defaultAvatar'
+SOUND_THUMBNAIL = 'http://bit.ly/defaultAvatar'
+TEXT_THUMBNAIL = 'http://bit.ly/defaultAvatar'

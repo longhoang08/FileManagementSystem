@@ -10,3 +10,4 @@ def save_file_info_to_database(**kwargs):
     file_info = models.File_info(**kwargs)
     models.db.session.add(file_info)
     return file_info
+
