@@ -9,7 +9,6 @@ pymysql==0.9.3
 pytest==3.6.2
 py==1.5.3
 pluggy==0.6.0
-pytest-flask==0.10.0
 pytest-cov==2.6.0
 gunicorn==19.7.1
 requests==2.20.0

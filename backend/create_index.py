@@ -3,7 +3,7 @@ import logging
 
 from file_management.repositories.file import FileElasticRepo
 
-__author__ = 'LongHB'
+__author__ = 'jian'
 _logger = logging.getLogger(__name__)
 
 if __name__ == "__main__":
