@@ -30,12 +30,15 @@ def init_app(app, **kwargs):
     from .profile import ns as profile_ns
     from .log import ns as log_ns
     from .notification import ns as notification_ns
+    from .file import ns as file_ns
 
     api.add_namespace(register_ns)
     api.add_namespace(user_ns)
     api.add_namespace(profile_ns)
     api.add_namespace(log_ns)
     api.add_namespace(notification_ns)
+    api.add_namespace(file_ns)
+    
     app.register_blueprint(api_bp)
     api.error_handlers[Exception] = global_error_handler
 
