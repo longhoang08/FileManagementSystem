@@ -26,3 +26,5 @@ attrs==19.1.0
 elasticsearch==7.0.2
 elasticsearch-dsl==7.0.0
 sentry-sdk==0.13.5
+google-cloud-vision==0.41.0
+preview-generator==0.13

@@ -23,3 +23,8 @@ change_password_req = {
     'new_password': fields.String(required=True, description='new password')
 }
 
+download_file_req = {
+    'user_id': fields.Integer(required=True, description='User want to download file'),
+    'file_id': fields.String(required=True, description='File_id')
+}
+

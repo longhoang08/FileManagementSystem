@@ -1,1 +1,8 @@
 DEFAULT_AVATAR = 'http://bit.ly/defaultAvatar'
+DEFAULT_THUMBNAIL = 'https://image.flaticon.com/icons/png/512/1126/1126900.png'
+ZIP_THUMBNAIL = 'https://image.flaticon.com/icons/png/512/1126/1126863.png'
+DOCX_THUMBNAIL = 'https://image.flaticon.com/icons/png/512/1126/1126859.png'
+PDF_THUMBNAIL = 'https://image.flaticon.com/icons/png/512/1126/1126862.png'
+SHEET_THUMBNAIL = 'https://image.flaticon.com/icons/png/512/1126/1126901.png'
+SOUND_THUMBNAIL = 'https://image.flaticon.com/icons/png/512/1126/1126864.png'
+TEXT_THUMBNAIL = 'https://image.flaticon.com/icons/png/512/1126/1126888.png'

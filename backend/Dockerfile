@@ -2,6 +2,22 @@ FROM python:3.6
 
 EXPOSE 5000
 WORKDIR /code
+
+RUN apt-get update && apt-get install -y \
+    zlib1g-dev \
+    libjpeg-dev \
+    python3-pythonmagick \
+    inkscape \
+    xvfb \
+    poppler-utils \
+    libfile-mimeinfo-perl \
+    qpdf \
+    libimage-exiftool-perl \
+    ufraw-batch \
+    ffmpeg \
+    imagemagick \
+    scribus
+
 ADD requirements.txt /code/
 
 RUN pip install --upgrade pip

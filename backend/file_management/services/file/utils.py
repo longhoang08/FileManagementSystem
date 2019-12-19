@@ -1,6 +1,6 @@
 from . import es
 from config import FILES_INDEX
-
+from file_management.constant import pathconst
 
 def get_ancestors(file_id):
     ancestors = []
@@ -9,6 +9,7 @@ def get_ancestors(file_id):
         ancestors.append(cur_id)
         cur_id = es.get_source(index=FILES_INDEX, id=cur_id)['parent_id']
     ancestors.append(cur_id)
+    ancestors.append(pathconst.FAKE_HDD)
     return ancestors[::-1]
 
 
