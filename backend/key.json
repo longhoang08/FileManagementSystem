@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "file-management-system-uet",
+  "private_key_id": "34c1a43ab234a7832163a69e39660af7fb942dd3",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDPdz9YCdknxCs6\ntTDvdFgYc/s4by2ttOGLY3x2kMiKA3k5xM8mL1SNArej37Es6HoGpCTr7GMObkF1\nWe5IlLP62HKAElBKq3Xr4Y3Qj8agvbWi9gW2eI4LNs7Wy3FJrXz21Rnbs3eqbb9J\nc8pKs5ifQgSG35Dl3fW+QYZCFaCWoVDzchycZbUbQ9sbrFvO3yFXKAx0nTrsdC8n\n8TnI9PBnnTbWNm7dlvL8Cky5fQWe2aPch9H2E05FRLsZOOcBNI2bGYGSAhf7Oe2r\ni1QAD7En+gIbKYbiZYtyf9TVd94/QaKW5vjseqyslfhftKhMN1es7jJjc/R1r3sR\nODJA5o9DAgMBAAECggEABGOe9PNcY0F8sqTDsMUy2e2WOobrnfmuLd9Acle0zmqt\nZWH7CfFFZihRD0f7vRn7/uj5GP6qx9LgUqXA60suFZf/sCLzDOlcuM1QTUHFb4Aj\n+BshWs9pHeaecJ/kOS1Q7/3pKqM83F+vBNRMytDK4U+pvdq7+4j7GnfTadGAUL92\nKvozZvKuGTL27VUDWz4FI8S8CqWOxsWbHl7H3WRFxRqPsiyrEkIYhWnwuxw0Q6Ht\naLkYvR80T/yovUO/49eLon6kyasoX5WT84woQpQJnVkfQogWXEXPDK7K4utRmoB3\npyd2/IXM3GBbDL/xGoMWCYIeZwPAdFfF9gEVJb1YDQKBgQD3OM5re8RNs8fg8g8e\nnMigNjTgVUuLyycX69ygmYnAUXe/q1GwYCnRvx2TuJHf/3t9COwLtXPpz5/jHoOx\nKq6qCjfiKRciVmd4Fq5kPoXphrAKDvm2zbx52fbrJC0Uap9lxBisJLiCFxFte9hz\nY0xMKj+IidVlJz+v31GbuF90NwKBgQDW1REcpsEnLDQ44nKNjuQewYP2mXBBfKBK\nSpfVEXtn9lPYtHk9WXvBx1FSzB/Kt/tFQ5cSvo5TWGJVFdoEVpTBrXLhXDAZO/T6\n3d380mCpjiKfBh83ImJ6SXJf0k3sTHNPolEW9fUONaafLkVK4+Xds/OkYO4k8At6\nu+jGkmhPVQKBgDSnLp+Jvqdl8N4h78JvVfN5WA2nXO2rGOppW5YA3WvObhiuXjmY\nYY/AioYZu0ff2+cnbU6ZGNTlWYI/z4B+PLEOeBR89+ZiTKsw+Xd0MYUpIHkj819R\ntiCloYc3Lzq38rbz6uVO9NUQILAWvmTk8y0NmnZ0FLT0hQXqJDFsNThFAoGAOH5b\nO5+WV4jGStcxrIwQ7Q2SeDytSmtNc3veJYetXg9mySvcXge0Bac2eYF4MsTi7Lnz\ndlhp8PzjDuDqLg3enHfSJ/UoKNqdd4L0p1FjXfMko5DmkIcYQnQiAZS6LROFl0Fl\n9ZXEVXJCWMXALwtzHTP/NBDRTyFYw3O6qM1DZOkCgYARNdvmAUk0/eMfoFZCa/Kv\nnitfZHsx8Bz+N3n/axc2ZhgoR2WRRCjHH9FDJUqlHlwJ2ejsxEyivaO3PonLeBmZ\nQOHL6ad1rmgKsrrXM3WO7W+cBSZdpO9HuczaEL+o7gYWeHN28F0y9eKS5vbGZ41h\n73Kb55rUSZdsMRlyiNYPqQ==\n-----END PRIVATE KEY-----\n",
+  "client_email": "visionapi@file-management-system-uet.iam.gserviceaccount.com",
+  "client_id": "102945419328548259377",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/visionapi%40file-management-system-uet.iam.gserviceaccount.com"
+}

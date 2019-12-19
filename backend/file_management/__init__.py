@@ -46,7 +46,7 @@ def create_app():
         'SEND_REPORT') == 'true' else None
 
     app.config['SENTRY_CONFIG'] = {
-        'ignore_exceptions': [NotFoundException, UnAuthorizedException,
+        'ignore_exceptions':    [NotFoundException, UnAuthorizedException,
                               BadRequestException, ForbiddenException],
         'level': logging.ERROR,
     }
