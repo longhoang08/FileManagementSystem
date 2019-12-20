@@ -8,6 +8,8 @@ from file_management import services
 from file_management.extensions import Namespace
 from file_management.helpers import decode_token
 from file_management.services.pending_register import send_confirm_email
+from file_management.repositories.files import insert
+
 # from file_management.api import requests, responses
 from . import requests, responses
 
@@ -27,9 +29,11 @@ class Registers(flask_restplus.Resource):
     def post(self):
         "validate register data, add data to pending register table and send confirm email"
         data = request.args or request.json
-        pending_register = services.pending_register.create_pending_register(**data)
+        pending_register = services.pending_register.create_pending_register(
+            **data)
         send_confirm_email(**data)
         return pending_register
+
 
 @ns.route('/confirm_email/<token>', methods=['GET'])
 class Confirm_email(flask_restplus.Resource):
@@ -38,4 +42,10 @@ class Confirm_email(flask_restplus.Resource):
         "checking jwt token in param and add new user to user table"
         email = decode_token(token)
         user = services.user.confirm_user_by_email(email)
+
+        user_inf = user.to_display_dict()
+        user_id = user_inf['user_id']
+        # create home
+        insert.insert(user_id, "home", 0, str(
+            user_id), user_id, "folder", "", "")
         return user.to_display_dict()
