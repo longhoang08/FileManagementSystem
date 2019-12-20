@@ -3,7 +3,7 @@ from .utils import get_ancestors
 from .update import update
 
 
-def insert(file_id, file_title, file_size, parent_id, user_id, mime_type, tags, starred=False, created_at=None,
+def insert(file_id, file_title, file_size, parent_id, user_id, mime_type, tags,thumbnail_url, starred=False, created_at=None,
            updated_at=None):
     document = {
         "file_id": file_id,
@@ -13,6 +13,7 @@ def insert(file_id, file_title, file_size, parent_id, user_id, mime_type, tags, 
         "owner": user_id,
         "star": starred,
         "parent_id": parent_id,
+        "thumbnail_url":thumbnail_url,
         "children_id": [],
         "share_mode": 0,
         "editable": False,

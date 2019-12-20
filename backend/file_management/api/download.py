@@ -16,14 +16,16 @@ ns = Namespace('download', description='Download files')
 
 _download_req = ns.model('download_req', requests.download_file_req)
 
-@ns.route('/<user_id>/<file_id>', methods=['GET'])
+@ns.route('/<file_id>', methods=['GET'])
 class Download(flask_restplus.Resource):
-    def get(self, user_id, file_id):
+    def get(self, file_id):
         try:
             UPLOAD_DIRECTORY = pathconst.DOWNLOAD
             folders = utils.get_ancestors(file_id) 
             file_path = '/'.join(folders)
-            true_name = repositories.download.find_file_by_file_id(file_id).file_title
+            true_name = services.file.search({"file_id":file_id, "user_id":1})['result']['files'][0]["file_title"]
+            print(true_name)
+            # _logger.log(true_name)
             return send_from_directory(UPLOAD_DIRECTORY, file_path, attachment_filename=true_name, as_attachment=True)
         except Exception as e:
             return str(e)
@@ -35,4 +37,4 @@ class Thumbnail(flask_restplus.Resource):
         Get thumbnail file
     """
     def get(self, file_id):
-        return send_file('../' + services.file.search(file_id=file_id)[0]["thumnail_url"])
+        return send_file('../' + services.file.search({"file_id":file_id, "user_id":1})['result']['files'][0]["thumbnail_url"])
