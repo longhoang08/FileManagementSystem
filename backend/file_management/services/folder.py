@@ -2,7 +2,6 @@
 import logging
 
 __author__ = 'longhb'
-
 from config import FILES_INDEX
 from file_management.repositories.file import FileElasticRepo
 from .file import search
@@ -19,8 +18,7 @@ def create_folder(args):
     file_title = args.get('file_title')
     user_id = args.get('user_id')
     file_id = helpers.generate_file_id(user_id)
-    return insert.insert(file_id, file_title, 0, parent_id, user_id, "folder", "","", starred=False)
-
+    return insert.insert(file_id, file_title, 0, parent_id, user_id, "folder", "", "", starred=False)
 
 
 def folder_details(args):
