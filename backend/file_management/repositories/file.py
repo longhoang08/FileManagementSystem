@@ -12,6 +12,8 @@ from file_management.repositories.es_base import EsRepositoryInterface
 __author__ = 'LongHB'
 _logger = logging.getLogger(__name__)
 
+FOLDER_DETAILS = ["star", "owner", "editable", "created_at", "description", "children_id"]
+
 
 class FileElasticRepo(EsRepositoryInterface):
     def __init__(self):
@@ -27,17 +29,21 @@ class FileElasticRepo(EsRepositoryInterface):
         :param args:
         :return:
         """
-        file_es = self.build_query(args)
+        file_es = self.build_file_query(args)
         # print(json.dumps(file_es.to_dict()))
         responses = file_es.using(self.es).index(self._index).execute()
         return responses
 
     def get_must_conditions(self, args):
         conditions = []
-        if (args.get('file_id')):
-            conditions.append(query.Term(file_id=args.get('file_id')))
-        if (args.get('q')):
-            search_text = args.get('q')
+        file_id = args.get('file_id')
+        if file_id:
+            if isinstance(file_id, list):
+                conditions.append(query.Terms(file_id=file_id))
+            else:
+                conditions.append(query.Term(file_id=file_id))
+        search_text = args.get('q')
+        if search_text:
             conditions.append(query.DisMax(queries=[
                 query.MatchPhrasePrefix(file_title={
                     'query': search_text,
@@ -59,6 +65,7 @@ class FileElasticRepo(EsRepositoryInterface):
         return conditions
 
     def build_filter_condions(self, args):
+        print(args.get('user_id'))
         if args.get('user_id'):
             return query.Bool(must=[
                 query.Term(owner=args.get('user_id')),
@@ -71,7 +78,15 @@ class FileElasticRepo(EsRepositoryInterface):
             ])
         raise BadRequestException("Required user id in arguments")
 
-    def build_query(self, args):
+    def get_children_of_folder(self, folder_id):
+        try:
+            response = self.es.get(self._index, folder_id, _source=FOLDER_DETAILS)['_source']
+            return response
+        except Exception as e:
+            _logger.error(e)
+            raise BadRequestException('Folder not exist')
+
+    def build_file_query(self, args):
         """
         Build query for es
         :param args:
@@ -100,7 +115,7 @@ class FileElasticRepo(EsRepositoryInterface):
         if (args.get('basic_info')):
             sources += ['file_title', 'star', 'updated_at', 'file_type']
         if sources:
-            args.source(sources)
+            file_es = file_es.source(sources)
         return file_es
 
     def add_page_limit_to_file_es(self, args, file_es):

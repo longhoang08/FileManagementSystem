@@ -17,6 +17,7 @@ from . import notification
 from . import upload
 from . import preview
 from . import file
+from . import folder
 
 my_mail = Mail()
 
