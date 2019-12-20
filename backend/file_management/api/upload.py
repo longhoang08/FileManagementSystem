@@ -65,7 +65,8 @@ class Upload(flask_restplus.Resource):
             # get tags if files is an image
             if('image' in mime_type):
                 tags = helpers.generate_image_tag(path_saved)
-        except:
+        except Exception as e:
+            _logger.error(e)
             raise PathUploadNotFound()
         # get response
         upload_success = services.upload.create_file_info(path_upload, user_id, parent_id, file_name, file_size, file_id, mime_type, tags)

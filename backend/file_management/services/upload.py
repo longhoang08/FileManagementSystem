@@ -15,7 +15,7 @@ def create_file_info(path_upload, user_id, parent_id, file_name, file_size, file
     #TODO get thumnail url
     thumbnail_url =  helpers.get_thumbnail_url(file_id, file_name, path_upload)
 
-    insert.insert(file_id, file_name, file_size, parent_id, user_id, mime_type, tags)
+    insert.insert(file_id, file_name, file_size, parent_id, user_id, mime_type, tags, thumbnail_url)
     file_info = repo.upload.save_file_info_to_database(
         file_id = file_id,
         file_title = file_name,
