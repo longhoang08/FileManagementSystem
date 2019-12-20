@@ -12,11 +12,12 @@ from file_management.extensions import Namespace
 from file_management.extensions.custom_exception import PathUploadNotFound, UserNotFoundException
 from . import responses
 from file_management import helpers
+from ..helpers.check_role import user_required
 from ..repositories.files import utils
 
 __author__ = 'Dang'
 
-from ..repositories.pending_register import find_one_by_email
+from ..repositories.user import find_one_by_email
 
 _logger = logging.getLogger(__name__)
 
@@ -33,8 +34,8 @@ class Upload(flask_restplus.Resource):
 
     @ns.marshal_with(_upload_res)
     @ns.expect(parser, validate=True)
+    @user_required
     def post(self):
-
         try:
             email = get_jwt_identity()
             user_id = find_one_by_email(email).id
