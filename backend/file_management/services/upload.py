@@ -1,10 +1,9 @@
 # coding=utf-8
 import logging
-import os
 import datetime
 from file_management import repositories as repo
 from file_management import helpers
-from file_management.services.file import insert
+from file_management.repositories.files import insert
 __author__ = 'Dang'
 _logger = logging.getLogger(__name__)
 
@@ -16,7 +15,7 @@ def create_file_info(path_upload, user_id, parent_id, file_name, file_size, file
     #TODO get thumnail url
     thumbnail_url =  helpers.get_thumbnail_url(file_id, file_name, path_upload)
 
-    insert.insert(file_id,file_name, file_size, parent_id, user_id, mime_type,tags)
+    insert.insert(file_id, file_name, file_size, parent_id, user_id, mime_type, tags)
     file_info = repo.upload.save_file_info_to_database(
         file_id = file_id,
         file_title = file_name,
@@ -32,5 +31,5 @@ def create_file_info(path_upload, user_id, parent_id, file_name, file_size, file
         shared = False,
         tags = ','.join(tags),
         **kwargs
-    ) 
+    )
     return file_info

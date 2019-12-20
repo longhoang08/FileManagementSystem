@@ -1,4 +1,3 @@
-from . import es
 from config import FILES_INDEX
 from .utils import get_ancestors
 from .update import update
@@ -24,6 +23,7 @@ def insert(file_id, file_title, file_size, parent_id, user_id, mime_type, tags, 
         "description": ""
     }
 
+    from file_management.repositories.files import es
     res = es.index(index=FILES_INDEX, body=document, id=file_id)
     ancestors = get_ancestors(parent_id)
 

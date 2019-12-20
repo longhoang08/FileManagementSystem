@@ -2,7 +2,7 @@ from file_management.models import db, TimestampMixin
 from file_management.constant import link
 
 class File_info(db.Model, TimestampMixin):
-    __tablename__ = 'file'
+    __tablename__ = 'files'
 
     def __init__(self, **kwargs):
         for k, v in kwargs.items():
@@ -12,7 +12,6 @@ class File_info(db.Model, TimestampMixin):
     file_title = db.Column(db.String(256), nullable=False)
     file_size = db.Column(db.Integer, nullable=False)
     parent_id = db.Column(db.String(100), nullable=False)
-    db.column   
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     mime_type = db.Column(db.String(100), nullable=False)
     starred = db.Column(db.Boolean, nullable=False, default=False)

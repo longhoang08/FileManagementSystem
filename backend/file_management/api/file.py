@@ -1,6 +1,6 @@
 """
 Just a test api
-You should remove this file after fully understand my code base!
+You should remove this files after fully understand my code base!
 """
 # coding=utf-8
 import logging
@@ -8,7 +8,9 @@ import logging
 import flask_restplus
 from flask import request
 
-from file_management.services.file import insert, search, delete, update
+from file_management import services
+from file_management.api.schema import requests
+from file_management.repositories import files
 from file_management.extensions import Namespace
 
 __author__ = 'jian'
@@ -23,17 +25,7 @@ class InsertFiles(flask_restplus.Resource):
         args = request.args or request.json
         if not args:
             args = {}
-        res = insert.insert(**args)
-        return res
-
-
-@ns.route('/search', methods=['POST'])
-class SearchFiles(flask_restplus.Resource):
-    def post(selfs):
-        args = request.args or request.json
-        if not args:
-            args = {}
-        res = search.search(**args)
+        res = files.insert.insert(**args)
         return res
 
 
@@ -43,7 +35,7 @@ class DeleteFiles(flask_restplus.Resource):
         args = request.args or request.json
         if not args:
             args = {}
-        res = delete.delete(**args)
+        res = files.delete.delete(**args)
         return res
 
 
@@ -53,5 +45,18 @@ class UpdateFiles(flask_restplus.Resource):
         args = request.args or request.json
         if not args:
             args = {}
-        res = update.update(**args)
+        res = files.update.update(**args)
         return res
+
+
+_file_details_req = ns.model('file_details_request', requests.file_details_req)
+
+
+@ns.route('/details', methods=['POST'])
+class GetFiles(flask_restplus.Resource):
+    @ns.expect(_file_details_req, validate=True)
+    def post(self):
+        args = request.args or request.json
+        if not args:
+            args = {}
+        return services.file.search(args)

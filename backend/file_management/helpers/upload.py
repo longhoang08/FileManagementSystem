@@ -13,7 +13,7 @@ def generate_file_id(user_id):
 
 
 def get_mime_type(file_name):
-    """Get mimetype from file name. Str return should be "image/jpeg" """
+    """Get mimetype from files name. Str return should be "image/jpeg" """
     return mimetypes.MimeTypes().guess_type(file_name)[0]
 
 

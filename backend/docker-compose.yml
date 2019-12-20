@@ -1,18 +1,18 @@
 version: '3.7'
 services:
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    restart: on-failure
-    env_file:
-      - .env
-    volumes:
-      - ./:/code
-    ports:
-      - "${APP_PORT}:5000"
-    depends_on:
-      - mysql
+#  app:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    restart: on-failure
+#    env_file:
+#      - .env
+#    volumes:
+#      - ./:/code
+#    ports:
+#      - "${APP_PORT}:5000"
+#    depends_on:
+#      - mysql
 
   mysql:
     image: mysql:8
@@ -42,7 +42,7 @@ services:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.4.0
     container_name: elasticsearch
     environment:
-      - cluster.name=file-management-system
+      - cluster.name=files-management-system
       - transport.host=localhost
       - xpack.security.enabled=false
       - discovery.type=single-node
