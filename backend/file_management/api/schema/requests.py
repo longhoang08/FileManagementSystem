@@ -38,3 +38,8 @@ file_details_req = {
 folder_details_req = {
     'folder_id': fields.String(required=False, description='folder_id')
 }
+
+folder_create_req = {
+    'parent_id': fields.String(required=False, description='parent_id'),
+    'folder_name': fields.String(required=False, description='folder_name')
+}
