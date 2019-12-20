@@ -3,6 +3,7 @@ from flask_jwt_extended import verify_jwt_in_request, get_jwt_identity
 
 from file_management.extensions.custom_exception import PermissionException, UserNotFoundException
 from file_management import models
+from file_management.repositories.files.utils import get_ancestors
 
 
 def user_required(fn):
@@ -40,3 +41,6 @@ def admin_required(fn):
         return fn(*arg, **kwargs)
 
     return wrapper
+
+def check_role(file_id, user_id):
+    ancestors = get_ancestors(file_id)
