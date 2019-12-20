@@ -48,7 +48,6 @@ class Upload(flask_restplus.Resource):
 
         folders = utils.get_ancestors(parent_id)
         path_upload = '/'.join(folders)
-
         if not os.path.exists(path_upload):
             os.makedirs(path_upload)
 
