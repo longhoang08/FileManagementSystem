@@ -9,23 +9,17 @@ NUM_HITS = 10
 settings = {
     "analysis": {
         "analyzer": {
-            "ngram_analyzer": {
-                "tokenizer": "ngram_tokenizer",
+            "vn_analyzer": {
+                "tokenizer": "standard",
                 "filter": [
                     "lowercase"
                 ]
-            }
-        },
-        "tokenizer": {
-            "ngram_tokenizer": {
-                "type": "ngram",
-                "min_gram": 3,
-                "max_gram": 3,
-                "token_chars": [
-                    "letter",
-                    "digit",
-                    "punctuation",
-                    "symbol"
+            },
+            "no_tone_analyzer": {
+                "tokenizer": "standard",
+                "filter": [
+                    "icu_folding",
+                    "lowercase"
                 ]
             }
         }
@@ -47,7 +41,13 @@ mappings = {
         },
         "file_title": {
             "type": "text",
-            "analyzer": "ngram_analyzer"
+            "analyzer": "vn_analyzer",
+            "fields": {
+                'no_tone': {
+                    "type": "text",
+                    "analyzer": "no_tone_analyzer"
+                }
+            }
         },
         "file_type": {
             "type": "keyword"
@@ -81,18 +81,24 @@ mappings = {
         },
         "description": {
             "type": "text",
-            "analyzer": "ngram_analyzer"
+            "analyzer": "vn_analyzer",
+            "fields": {
+                'no_tone': {
+                    "type": "text",
+                    "analyzer": "no_tone_analyzer"
+                }
+            }
         },
         "file_tag": {
             "type": "keyword"
         },
         "created_at": {
             "type": "date",
-            "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis"
+            "format": "date_optional_time||dd/MM/yyyy hh:mm:ss a"
         },
         "updated_at": {
             "type": "date",
-            "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis"
+            "format":"date_optional_time||dd/MM/yyyy hh:mm:ss a"
         }
     }
 }
