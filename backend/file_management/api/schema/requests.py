@@ -29,10 +29,14 @@ download_file_req = {
 
 }
 file_details_req = {
-    'file_id': fields.String(required=False, description='File_id'),
     'q': fields.String(required=False, description='Search text'),
     'user_id': fields.String(required=False, description='Search text'),
-    'basic_info': fields.Boolean(required=False, description='Only get basic info of file')
+    'basic_info': fields.Boolean(required=False, description='Only get basic info of file'),
+    'only_photo': fields.Boolean(required=False, description='Only get photo'),
+    'star': fields.Boolean(required=False, description='Only get star'),
+    'trash': fields.Boolean(required=False, description='Only get file in trash'),
+    '_limit': fields.Integer(required=False, description='Limit each page'),
+    '_page': fields.Integer(required=False, description='Page-th'),
 }
 folder_details_req = {
     'folder_id': fields.String(required=False, description='folder_id')

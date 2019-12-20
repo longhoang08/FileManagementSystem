@@ -65,18 +65,22 @@ class FileElasticRepo(EsRepositoryInterface):
         return conditions
 
     def build_filter_condions(self, args):
-        print(args.get('user_id'))
-        if args.get('user_id'):
-            return query.Bool(must=[
-                query.Term(owner=args.get('user_id')),
-                query.Bool(
-                    should=[
-                        query.Term(trashed=False),
-                        query.Bool(must_not=query.Exists(field="trashed"))
-                    ]
-                )
-            ])
-        raise BadRequestException("Required user id in arguments")
+        if not args.get('user_id'):
+            raise BadRequestException("Required user id in arguments")
+        must_conditions = []
+        must_conditions.append(query.Term(owner=args.get('user_id')))
+        must_conditions.append(query.Bool(
+            should=[
+                query.Term(trashed=False),
+                query.Bool(must_not=query.Exists(field="trashed"))
+            ] if not args.get('trash') else [query.Term(trashed=True)]
+        ))
+        if args.get('star'):
+            must_conditions.append(query.Term(star=True))
+        if args.get('only_photo'):
+            must_conditions.append(query.Prefix(file_type={'value': 'image'}))
+
+        return query.Bool(must=must_conditions)
 
     def get_children_of_folder(self, folder_id):
         try:
@@ -125,11 +129,22 @@ class FileElasticRepo(EsRepositoryInterface):
         return file_es
 
     def sort_condition(self, args):
-        return [self.sort_by_score()]
+        sort_conditions = [self.sort_by_score(), self.sort_by_time()]
+        if args.get('q'):
+            return sort_conditions
+        else:
+            return sort_conditions[::-1]
 
     def sort_by_score(self):
         return {
             '_score': {
+                'order': 'desc'
+            }
+        }
+
+    def sort_by_time(self):
+        return {
+            'updated_at': {
                 'order': 'desc'
             }
         }
