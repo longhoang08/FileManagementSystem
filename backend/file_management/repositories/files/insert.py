@@ -1,10 +1,9 @@
 from config import FILES_INDEX
 from .utils import get_ancestors
 from .update import update
-
-
-def insert(file_id, file_title, file_size, parent_id, user_id, mime_type, tags,thumbnail_url, starred=False, created_at=None,
-           updated_at=None):
+import datetime
+def insert(file_id, file_title, file_size, parent_id, user_id, mime_type, tags,thumbnail_url, starred=False, created_at=datetime.datetime.now().strftime("%d/%m/%Y %X %p"),
+           updated_at=datetime.datetime.now().strftime("%d/%m/%Y %X %p")):
     document = {
         "file_id": file_id,
         "file_title": file_title,

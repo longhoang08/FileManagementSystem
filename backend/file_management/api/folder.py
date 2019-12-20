@@ -14,6 +14,8 @@ _logger = logging.getLogger(__name__)
 ns = Namespace('folder', description='Folder operations')
 
 _folder_details_req = ns.model('folder details', requests.folder_details_req)
+_folder_create_req = ns.model('folder create', requests.folder_create_req)
+
 
 
 @ns.route('/details', methods=['POST'])
@@ -24,3 +26,13 @@ class GetFolders(flask_restplus.Resource):
         if not args:
             args = {}
         return services.folder.folder_details(args)
+
+
+@ns.route('/create', methods=['POST'])
+class CreateFolder(flask_restplus.Resource):
+    @ns.expect(_folder_create_req, validate=True)
+    def post(self):
+        args = request.args or request.json
+        if not args:
+            args = {}
+        return services.folder.create_folder(args)
