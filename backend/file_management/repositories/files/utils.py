@@ -11,6 +11,9 @@ def get_ancestors(file_id):
         cur_id = es.get_source(index=FILES_INDEX, id=cur_id)['parent_id']
     ancestors.append(cur_id)
     ancestors.append(pathconst.FAKE_HDD)
+    print(ancestors)
+    print(file_id)
+    print(type(file_id))
     return ancestors[::-1]
 
 

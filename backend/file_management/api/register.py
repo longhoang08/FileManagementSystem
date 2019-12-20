@@ -46,6 +46,5 @@ class Confirm_email(flask_restplus.Resource):
         user_inf = user.to_display_dict()
         user_id = user_inf['user_id']
         # create home
-        insert.insert(user_id, "home", 0, str(
-            user_id), user_id, "folder", "", "")
+        insert.insert(str(user_id), "home", 0, "0", str(user_id), "folder", "", "")
         return user.to_display_dict()

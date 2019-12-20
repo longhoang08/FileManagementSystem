@@ -72,6 +72,7 @@ def create_app():
     jwt = JWTManager(app)
 
     app.config['CORS_SUPPORTS_CREDENTIALS'] = True
+    app.config['CORS_HEADERS'] = 'Content-Type'
 
     # setup logging
     logging.config.fileConfig(app.config['LOGGING_CONFIG_FILE'],
