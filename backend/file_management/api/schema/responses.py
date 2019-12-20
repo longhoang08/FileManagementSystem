@@ -39,7 +39,8 @@ file_uploaded_res = {
     'version' :fields.Integer(required=True, description="Version"),
     'has_thumbnail' : fields.Boolean(required=True, description="Is Has thumbnail"),
     'thumbnail_url' : fields.String(required=True, description="Thumbnail url"),
-    'shared' : fields.Boolean(required=True, description="Is shared")
+    'shared' : fields.Boolean(required=True, description="Is shared"),
+    'tags' : fields.String(required=True, description="Tags")
 } 
 
 

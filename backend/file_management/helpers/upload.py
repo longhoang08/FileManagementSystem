@@ -1,4 +1,5 @@
 import uuid
+from flask import send_file, url_for
 import mimetypes
 import subprocess
 from file_management.constant import link, pathconst
@@ -44,7 +45,7 @@ def get_thumbnail_url(file_id, file_name, path_upload):
     if not is_has_thumbail(file_name):
         return link.DEFAULT_THUMBNAIL
     elif "image" in mime:
-        return gen_thumbnail(file_id, path_upload)
+        return url_for(send_file('../' + gen_thumbnail(file_id, path_upload)))
     elif "video" in mime:
         return gen_video_thumbnail(file_id, path_upload)
     elif "pdf" in mime:
