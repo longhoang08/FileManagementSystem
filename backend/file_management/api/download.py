@@ -32,4 +32,14 @@ class Download(flask_restplus.Resource):
         except Exception as e:
             return str(e)
             raise CannotDownloadFile()
+
+@ns.route('/thumbnail/<file_id>', methods=['GET'])
+class Thumbnail(flask_restplus.Resource):
+    """
+        Get thumbnail file
+    """
+    def get(self, file_id):
+        return "chuwa do"
+        #TODO change es get
+        # return send_file(es.get(file_id))
        

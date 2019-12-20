@@ -29,3 +29,10 @@ class Get_preview(flask_restplus.Resource):
             return send_file("../" + preview.get_zip_preview(file_id, file_path))
         elif sum([x in mime_type for x in mime.docs]):
             return send_file("../" + preview.get_docs_preview(file_id, file_path))
+        elif sum([x in mime_type for x in mime.video]):
+            return send_file("../" + file_path,mimetype='video/mp4')
+        elif sum([x in mime_type for x in mime.audio]):
+            return send_file("../" + file_path,mimetype='audio/mpeg')
+        else:
+            return "Can not preview"
+
