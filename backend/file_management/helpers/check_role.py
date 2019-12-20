@@ -10,18 +10,13 @@ def user_required(fn):
     Check user role,
     if not, throw Exception
     """
-
     @wraps(fn)
     def wrapper(*arg, **kwargs):
         verify_jwt_in_request()
         email = get_jwt_identity()
         if email is None:
-            raise PermissionException()
-        user = models.User.query.filter_by(email=email).first()
-        if user is None:
-            raise UserNotFoundException()
+            raise PermissionException("Login required")
         return fn(*arg, **kwargs)
-
     return wrapper
 
 
@@ -41,7 +36,7 @@ def admin_required(fn):
         if user is None:
             raise UserNotFoundException()
         if not user.is_admin:
-            raise PermissionException()
+            raise PermissionException("Admin required")
         return fn(*arg, **kwargs)
 
     return wrapper
