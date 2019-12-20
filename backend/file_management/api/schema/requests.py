@@ -32,7 +32,7 @@ file_details_req = {
     'file_id': fields.String(required=False, description='File_id'),
     'q': fields.String(required=False, description='Search text'),
     'user_id': fields.String(required=False, description='Search text'),
-    'basic_info': fields.String(required=False, description='Only get basic info of file')
+    'basic_info': fields.Boolean(required=False, description='Only get basic info of file')
 }
 
 folder_details_req = {
