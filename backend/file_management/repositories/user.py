@@ -68,6 +68,7 @@ def block_user(user):
     m.db.session.commit()
     return user
 
+
 def un_block_user(user):
     user.is_active = True
     m.db.session.commit()
