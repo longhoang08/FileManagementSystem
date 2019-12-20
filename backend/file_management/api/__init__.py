@@ -35,7 +35,7 @@ def init_app(app, **kwargs):
     from .file import ns as file_ns
     from .preview import ns as preview_ns
     from .folder import ns as folder_ns
-
+    from .admin import ns as admin_ns
     api.add_namespace(register_ns)
     api.add_namespace(user_ns)
     api.add_namespace(profile_ns)
@@ -45,6 +45,7 @@ def init_app(app, **kwargs):
     api.add_namespace(download_ns)
     api.add_namespace(preview_ns)
     api.add_namespace(folder_ns)
+    api.add_namespace(admin_ns)
     api.add_namespace(file_ns)
 
     app.register_blueprint(api_bp)

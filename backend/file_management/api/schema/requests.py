@@ -34,7 +34,6 @@ file_details_req = {
     'user_id': fields.String(required=False, description='Search text'),
     'basic_info': fields.Boolean(required=False, description='Only get basic info of file')
 }
-
 folder_details_req = {
     'folder_id': fields.String(required=False, description='folder_id')
 }
@@ -42,4 +41,7 @@ folder_details_req = {
 folder_create_req = {
     'parent_id': fields.String(required=False, description='parent_id'),
     'folder_name': fields.String(required=False, description='folder_name')
+}
+switch_block_user_req = {
+    'email': fields.String(required=True, description='Email need to block')
 }
