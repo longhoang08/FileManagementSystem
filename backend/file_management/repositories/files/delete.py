@@ -1,10 +1,10 @@
-from . import es
 from config import FILES_INDEX
 from .utils import get_descendants, get_ancestors
 from .update import update
 
 
 def delete(file_id):
+    from . import es
     file = es.get_source(index=FILES_INDEX, id=file_id)
     descendants = get_descendants(file_id)
     ancestors = get_ancestors(file_id)

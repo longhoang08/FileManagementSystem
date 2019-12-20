@@ -9,13 +9,14 @@ from file_management import services
 from werkzeug.datastructures import FileStorage
 from file_management.extensions import Namespace
 from file_management.extensions.custom_exception import PathUploadNotFound
-from . import requests, responses
+from . import responses
 from file_management import helpers
-from file_management.services.file import utils
+from ..repositories.files import utils
+
 __author__ = 'Dang'
 _logger = logging.getLogger(__name__)
 
-ns = Namespace('upload', description='Upload file')
+ns = Namespace('upload', description='Upload files')
 
 _upload_res = ns.model('upload_res', responses.file_uploaded_res)
 
@@ -36,32 +37,32 @@ class Upload(flask_restplus.Resource):
         parent_id = request.form['parent_id']
         folders = utils.get_ancestors(parent_id)
         path_upload = '/'.join(folders)
-        
+
         if not os.path.exists(path_upload):
             os.makedirs(path_upload)
-        
+
 
         fi = request.files.get('in_file')
         file_id = helpers.generate_file_id(user_id)
         file_name = fi.filename
-        path_saved = ''
+
         mime_type = ''
-        
+
         try:
             mime_type = helpers.get_mime_type(file_name)
         except:
             pass
-        
+
         try:
-            # save file on server
+            # save files on server
             path_saved = os.path.join(path_upload, file_id)
             fi.save(path_saved)
 
-            # get file size
+            # get files size
             file_size = os.stat(path_saved).st_size
             tags = ['']
 
-            # get tags if file is an image
+            # get tags if files is an image
             if('image' in mime_type):
                 tags = helpers.generate_image_tag(path_saved)
         except:

@@ -1,22 +1,18 @@
 # coding=utf-8
 import logging
-import os
 import flask_restplus
-from flask import request, send_from_directory
-from flask_restplus import reqparse
-from file_management import services
+from flask import send_from_directory
 from file_management import repositories
-from werkzeug.datastructures import FileStorage
 from file_management.extensions import Namespace
 from file_management.extensions.custom_exception import CannotDownloadFile
-from . import requests, responses
-from file_management.services.file import utils
+from . import requests
+from ..repositories.files import utils
 from file_management.constant import pathconst
 
 __author__ = 'Dang'
 _logger = logging.getLogger(__name__)
 
-ns = Namespace('download', description='Download file')
+ns = Namespace('download', description='Download files')
 
 _download_req = ns.model('download_req', requests.download_file_req)
 
