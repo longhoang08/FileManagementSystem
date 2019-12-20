@@ -1,8 +1,8 @@
 # coding=utf-8
 import logging
 import flask_restplus
-from flask import send_from_directory
-from file_management import repositories
+from flask import send_from_directory, send_file
+from file_management import repositories, services
 from file_management.extensions import Namespace
 from file_management.extensions.custom_exception import CannotDownloadFile
 from . import requests
@@ -35,7 +35,4 @@ class Thumbnail(flask_restplus.Resource):
         Get thumbnail file
     """
     def get(self, file_id):
-        return "chuwa do"
-        #TODO change es get
-        # return send_file(es.get(file_id))
-       
+        return send_file('../' + services.file.search(file_id=file_id)[0]["thumnail_url"])

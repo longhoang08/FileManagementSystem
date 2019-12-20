@@ -58,6 +58,9 @@ mappings = {
         "star": {
             "type": "boolean"
         },
+        "thumbnail_url": {
+            "type": "keyword"
+        },
         "parent_id": {
             "type": "keyword"
         },
