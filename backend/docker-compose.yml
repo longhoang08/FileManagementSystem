@@ -1,18 +1,18 @@
 version: '3.7'
 services:
-    app:
-      build:
-        context: .
-        dockerfile: Dockerfile
-      restart: on-failure
-      env_file:
-        - .env
-      volumes:
-        - ./:/code
-      ports:
-        - "${APP_PORT}:5000"
-      depends_on:
-        - mysql
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: on-failure
+    env_file:
+      - .env
+    volumes:
+      - ./:/code
+    ports:
+      - "${APP_PORT}:5000"
+    depends_on:
+      - mysql
 
   mysql:
     image: mysql:8

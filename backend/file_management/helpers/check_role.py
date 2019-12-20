@@ -11,6 +11,7 @@ def user_required(fn):
     Check user role,
     if not, throw Exception
     """
+
     @wraps(fn)
     def wrapper(*arg, **kwargs):
         verify_jwt_in_request()
@@ -18,6 +19,7 @@ def user_required(fn):
         if email is None:
             raise PermissionException("Login required")
         return fn(*arg, **kwargs)
+
     return wrapper
 
 
@@ -42,5 +44,8 @@ def admin_required(fn):
 
     return wrapper
 
+
 def check_role(file_id, user_id):
-    ancestors = get_ancestors(file_id)
+    from file_management.services.file import get_permision
+    ancestors = get_ancestors(str(file_id))
+    return get_permision(user_id, ancestors)

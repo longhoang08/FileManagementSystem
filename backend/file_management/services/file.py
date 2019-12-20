@@ -28,6 +28,27 @@ def search(args):
     return extract_file_data_from_response(response)
 
 
+def get_permision(user_id, file_ids):
+    file_es = FileElasticRepo()
+    response = file_es.get_permission(user_id, file_ids)
+    response = extract_file_data_from_response(response)
+    files = response['result']['files']
+    result = {
+        'editable': False,
+        'view': False
+    }
+    if not files:
+        return result
+    file = files[0]
+    if file['owner'] == user_id or (file['share_mode'] == 1 and file['editable'] == True):
+        result['editable'] = True
+    result['view'] = True
+    return {
+        'editable': file['editable'],
+        'view': True
+    }
+
+
 def extract_file_data_from_response(responses):
     if not responses:
         return {'result': {'files': []}}

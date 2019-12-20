@@ -149,22 +149,31 @@ class FileElasticRepo(EsRepositoryInterface):
             }
         }
 
-    def check_permission_query(self, user_id, file_ids):
-        conditions = query.Bool(filter=[
+    def get_permission(self, user_id, file_ids):
+        query_conditions = query.Bool(must=[
             query.Terms(file_id=file_ids),
             query.Bool(should=[
-                query.Bool(
-                    must=[
-                        query.Term(share_mode=1),
-                        query.Term(users_shared=user_id)
-                    ]
-                ),
+                query.Term(owner={
+                    'value': user_id,
+                    'boost': 100
+                }),
+                query.Bool(must=[
+                    query.Term(share_mode={
+                        'value': 1,
+                        'boost': 5
+                    }),
+                    query.Term(users_shared={
+                        'value': user_id,
+                        'boost': 5
+                    })
+                ]),
                 query.Term(share_mode=2)
             ])
         ])
         file_es = Search() \
-            .query(conditions) \
-            .sort([])
-        file_es = file_es.sort(*self.sort_condition(args))
-        file_es = self.add_custom_source(file_es, args)
-        file_es = self.add_page_limit_to_file_es(args, file_es)
+            .query(query_conditions) \
+            .source(['owner', 'share_mode', 'editable'])
+        file_es = file_es[0:1]
+        print(json.dumps(file_es.to_dict()))
+        responses = file_es.using(self.es).index(self._index).execute()
+        return responses

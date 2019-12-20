@@ -26,7 +26,7 @@ ns = Namespace('upload', description='Upload files')
 _upload_res = ns.model('upload_res', responses.file_uploaded_res)
 
 
-@ns.route('/', methods=['POST'])
+@ns.route('/', methods=['PUT'])
 class Upload(flask_restplus.Resource):
     parser = reqparse.RequestParser()
     parser.add_argument('in_file', type=FileStorage, location='files')
@@ -35,7 +35,7 @@ class Upload(flask_restplus.Resource):
     @ns.marshal_with(_upload_res)
     @ns.expect(parser, validate=True)
     @user_required
-    def post(self):
+    def put(self):
         try:
             email = get_jwt_identity()
             user_id = find_one_by_email(email).id
