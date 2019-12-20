@@ -40,7 +40,9 @@ folder_details_req = {
 
 folder_create_req = {
     'parent_id': fields.String(required=False, description='parent_id'),
-    'folder_name': fields.String(required=False, description='folder_name')
+    'file_title': fields.String(required=False, description='folder_name'),
+    'user_id': fields.String(required=False, description='user_id')
+
 }
 switch_block_user_req = {
     'email': fields.String(required=True, description='Email need to block')

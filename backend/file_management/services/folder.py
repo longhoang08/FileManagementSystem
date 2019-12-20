@@ -4,8 +4,10 @@ import logging
 __author__ = 'longhb'
 
 from config import FILES_INDEX
-from file_management.repositories.file import FileElasticRepo,
+from file_management.repositories.file import FileElasticRepo
 from .file import search
+from file_management import helpers
+
 from file_management.repositories.files import insert
 
 _logger = logging.getLogger(__name__)
@@ -14,9 +16,11 @@ _logger = logging.getLogger(__name__)
 def create_folder(args):
     # check token
     parent_id = args.get('parent_id')
-    folder_name = args.get('folder_name')
+    file_title = args.get('file_title')
+    user_id = args.get('user_id')
+    file_id = helpers.generate_file_id(user_id)
+    return insert.insert(file_id, file_title, 0, parent_id, user_id, "folder", "","", starred=False)
 
-    insert(file_id, folder, file_size, parent_id, user_id, "folder", "","", starred=False)
 
 
 def folder_details(args):
