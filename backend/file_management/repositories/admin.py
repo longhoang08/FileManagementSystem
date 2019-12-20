@@ -12,7 +12,7 @@ _logger = logging.getLogger(__name__)
 
 
 def get_all_users(page, ipp):
-    users = m.User.query.all().paginate(int(page), int(ipp), error_out=False).items
+    users = m.User.query.paginate(int(page), int(ipp), error_out=False).items
     return users
 
 

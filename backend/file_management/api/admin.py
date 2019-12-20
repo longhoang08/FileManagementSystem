@@ -34,7 +34,7 @@ class ShowUsers(Resource):
         """
         Show all users in database
         """
-        users = get_all_users(**requests.args)
+        users = get_all_users(**request.args)
         return {
             "users": users
         }
