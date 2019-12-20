@@ -24,7 +24,17 @@ change_password_req = {
 }
 
 download_file_req = {
-    'user_id': fields.Integer(required=True, description='User want to download file'),
+    'user_id': fields.Integer(required=True, description='User want to download files'),
     'file_id': fields.String(required=True, description='File_id')
+
+}
+file_details_req = {
+    'file_id': fields.String(required=False, description='File_id'),
+    'q': fields.String(required=False, description='Search text'),
+    'user_id': fields.String(required=False, description='Search text'),
+    'basic_info': fields.String(required=False, description='Only get basic info of file')
 }
 
+folder_details_req = {
+    'folder_id': fields.String(required=False, description='folder_id')
+}

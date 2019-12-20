@@ -1,4 +1,3 @@
-from . import es
 from config import FILES_INDEX
 from .utils import get_ancestors
 
@@ -7,6 +6,7 @@ def update(file_id, **kwargs):
     update_body = {}
     fields = ['file_title', 'file_type', 'owner', 'star', 'parent_id', 'share_mode', 'editable', 'users_shared',
               'children_id', 'size', 'description', 'file_tag', 'created_at', 'updated_at']
+    from file_management.repositories.files import es
     file = es.get_source(index=FILES_INDEX, id=file_id)
 
     for field in fields:
@@ -49,6 +49,7 @@ def update_size(old_parent, new_parent, file_size):
     negotiate_size = list(old_ancestors.difference(new_ancestors))
     advance_size = list(new_ancestors.difference(old_ancestors))
 
+    from file_management.repositories.files import es
     es.indices.refresh(index=FILES_INDEX)
     es.update_by_query(
         index=FILES_INDEX,

@@ -1,17 +1,16 @@
 # coding=utf-8
 import logging
 
-from file_management.repositories.file import FileElasticRepo
+from file_management.repositories.files import FileElasticRepo
 
 __author__ = 'LongHB'
 _logger = logging.getLogger(__name__)
 
 
-def get_all_files(args):
+def search(args):
     file_es = FileElasticRepo()
-    responses = file_es.search(args)
-    files = extract_file_data_from_response(responses)
-    return files
+    response = file_es.search(args)
+    return extract_file_data_from_response(response)
 
 
 def extract_file_data_from_response(responses):

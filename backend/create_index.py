@@ -1,7 +1,7 @@
 # coding=utf-8
 import logging
 
-from file_management.repositories.file import FileElasticRepo
+from file_management.repositories.files import FileElasticRepo
 
 __author__ = 'jian'
 _logger = logging.getLogger(__name__)

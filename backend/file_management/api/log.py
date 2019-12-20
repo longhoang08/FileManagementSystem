@@ -9,7 +9,7 @@ from . import responses
 
 _logger = logging.getLogger(__name__)
 
-ns = Namespace('logs', description='Log about create edit remove file in folder')
+ns = Namespace('logs', description='Log about create edit remove files in folder')
 
 _change_res = ns.model('logs_res', responses.log_field)
 
@@ -17,5 +17,5 @@ _change_res = ns.model('logs_res', responses.log_field)
 class Get_log(flask_restplus.Resource):
     @ns.marshal_list_with(_change_res)
     def get(self):
-        """ Log about create edit remove file in folder """
+        """ Log about create edit remove files in folder """
         return get_all_log(folder_id)

@@ -42,5 +42,3 @@ file_uploaded_res = {
     'shared' : fields.Boolean(required=True, description="Is shared"),
     'tags' : fields.String(required=True, description="Tags")
 } 
-
-

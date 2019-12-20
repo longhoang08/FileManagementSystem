@@ -17,5 +17,6 @@ def send_email(subject, contact, body_message):
                   html=body_message)
     try:
         my_mail.send(msg)
-    except:
+    except Exception as e:
+        _logger.error(e)
         raise CantSendEmailException()
