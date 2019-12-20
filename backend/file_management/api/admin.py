@@ -20,28 +20,9 @@ _user_res = ns.model('user_response', responses.user_res)
 _users_list_res = ns.model('users list response', {
     'users': fields.List(fields.Nested(_user_res))
 })
-_show_users_parser = reqparse.RequestParser()
-_show_users_parser.add_argument('page', type=int)
-_show_users_parser.add_argument('ipp', type=int)
-
-
-@ns.route('/show_users', methods=['GET'])
-class ShowUsers(Resource):
-    @admin_required
-    @ns.expect(_show_users_parser)
-    @ns.marshal_with(_users_list_res)
-    def get(self):
-        """
-        Show all users in database
-        """
-        users = get_all_users(**request.args)
-        return {
-            "users": users
-        }
-
 
 _search_users_parser = reqparse.RequestParser()
-_search_users_parser.add_argument('username', required=True)
+_search_users_parser.add_argument('username')
 _search_users_parser.add_argument('page', type=int)
 _search_users_parser.add_argument('ipp', type=int)
 

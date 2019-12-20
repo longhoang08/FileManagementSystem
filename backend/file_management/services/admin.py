@@ -16,7 +16,7 @@ def get_all_users(page=1, ipp=10):
     return users_dict
 
 
-def search_users(username, page=1, ipp=10):
+def search_users(username='', page=1, ipp=10):
     users = repositories.admin.search_users(username, page, ipp)
     users_dict = [user.to_dict() for user in users]
     return users_dict
