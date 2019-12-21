@@ -39,7 +39,6 @@ def extract_file_data_from_response(responses):
     return {'result': {'files': files}}
 
 
-@owner_privilege_required
 def move2trash(file_ids=None):
     """
     Move files to trash
@@ -48,9 +47,9 @@ def move2trash(file_ids=None):
         return "Only accept `list` datatype"
     if len(file_ids) == 0:
         return "Nothing to move!"
-    parent_of_first_file = files.utils.get_file(file_ids[0])['parent_id']
+    parent_of_first_file = services.file.search({"file_id":file_ids[0], "user_id":1})['result']['files'][0]["parent_id"]
     for file_id in file_ids:
-        parent_id = files.utils.get_file(file_id)['parent_id']
+        parent_id = services.file.search({"file_id":file_id, "user_id":1})['result']['files'][0]["parent_id"]
         if parent_id != parent_of_first_file:
             """
             All file must have same parent_id, else throws Exception
