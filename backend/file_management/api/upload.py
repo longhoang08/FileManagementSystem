@@ -33,7 +33,6 @@ class Upload(flask_restplus.Resource):
     parser.add_argument('in_file', type=FileStorage, location='files')
     parser.add_argument('parent_id', type=str, help='parent_id')
 
-    @ns.marshal_with(_upload_res)
     @ns.expect(parser, validate=True)
     @user_required
     def put(self):
@@ -52,37 +51,5 @@ class Upload(flask_restplus.Resource):
 
         fi = request.files.get('in_file')
 
-        folders = utils.get_ancestors(parent_id)
-        path_upload = '/'.join(folders)
-        if not os.path.exists(path_upload):
-            os.makedirs(path_upload)
-
-        file_id = helpers.generate_file_id(user_id)
-        file_name = fi.filename
-
-        mime_type = ''
-
-        try:
-            mime_type = helpers.get_mime_type(file_name)
-        except:
-            pass
-
-        try:
-            # save files on server
-            path_saved = os.path.join(path_upload, file_id)
-            fi.save(path_saved)
-
-            # get files size
-            file_size = os.stat(path_saved).st_size
-            tags = ['']
-
-            # get tags if files is an image
-            if ('image' in mime_type):
-                tags = helpers.generate_image_tag(path_saved)
-        except Exception as e:
-            _logger.error(e)
-            raise PathUploadNotFound()
-        # get response
-        upload_success = services.upload.create_file_info(path_upload, user_id, parent_id, file_name, file_size,
-                                                          file_id, mime_type, tags)
-        return upload_success
+        return services.upload.write_file(fi, parent_id, user_id)
+        

@@ -52,6 +52,12 @@ switch_block_user_req = {
     'email': fields.String(required=True, description='Email need to block')
 }
 
+share_req = {
+    'file_id': fields.String(required=True, description='File_id'),
+    'emails': fields.List(fields.String, required=False),
+    'share_by_link': fields.Boolean(required=False, default=False),
+    'private': fields.Boolean(required=False, default=False)
+}
 trash_req = {
     'file_ids': fields.List(fields.String, required=True)
 }
