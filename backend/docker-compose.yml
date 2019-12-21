@@ -14,7 +14,6 @@ services:
     depends_on:
       - mysql
       - elasticsearch
-      - worker
       - my_redis_service
 
   mysql:
@@ -46,6 +45,7 @@ services:
     env_file:
       - .env
     command: celery -A proj file_management.celery.tasks.app -l info
+
   elasticsearch:
     image: tekodevops/elasticsearch:7.3.1-icu-vni
     container_name: elasticsearch
