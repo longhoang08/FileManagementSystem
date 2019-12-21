@@ -2,6 +2,35 @@ from config import FILES_INDEX
 from file_management.constant import pathconst
 
 
+def get_role_of_user(user_id, file_id):
+    from file_management.repositories.files import es
+    cur_id = file_id
+    user_id = str(user_id)
+    viewable = False
+    editable = False
+    is_owner = False
+    while es.exists(index=FILES_INDEX, id=cur_id):
+        cur_file = es.get_source(index=FILES_INDEX, id=cur_id)
+        if (cur_file['owner'] == user_id):
+            is_owner = True
+        if cur_file['share_mode'] == 1 and user_id in cur_file['children_id']:
+            viewable = True
+            if cur_file['editable'] == True:
+                editable = True
+        if cur_file['share_mode'] == 1:
+            viewable = True
+        if is_owner: break
+        cur_id = cur_file['parent_id']
+    if is_owner:
+        viewable = True
+        editable = True
+    return {
+        'is_owner': is_owner,
+        'viewable': viewable,
+        'editable': editable
+    }
+
+
 def get_ancestors(file_id):
     from file_management.repositories.files import es
     ancestors = []
@@ -11,9 +40,6 @@ def get_ancestors(file_id):
         cur_id = es.get_source(index=FILES_INDEX, id=cur_id)['parent_id']
     ancestors.append(cur_id)
     ancestors.append(pathconst.FAKE_HDD)
-    print(ancestors)
-    print(file_id)
-    print(type(file_id))
     return ancestors[::-1]
 
 

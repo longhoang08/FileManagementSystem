@@ -117,7 +117,7 @@ class FileElasticRepo(EsRepositoryInterface):
         if (args.get('get_children_id')):
             sources += ['children_id']
         if (args.get('basic_info')):
-            sources += ['file_title', 'star', 'updated_at', 'file_type']
+            sources += ['file_title', 'star', 'updated_at', 'file_type', 'file_id']
         if sources:
             file_es = file_es.source(sources)
         return file_es

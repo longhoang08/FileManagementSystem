@@ -5,10 +5,12 @@ from flask_jwt_extended import get_jwt_identity
 
 from file_management import helpers
 from file_management.extensions.custom_exception import UserNotFoundException, PermissionException
-from file_management.helpers.check_role import user_required, check_role
+from file_management.helpers.check_role import user_required
 from file_management.repositories.files import FileElasticRepo, insert
 
 __author__ = 'LongHB'
+
+from file_management.repositories.files.utils import get_role_of_user
 
 from file_management.repositories.user import find_one_by_email
 from file_management.services.file import extract_file_data_from_response, get_permision
@@ -41,8 +43,8 @@ def folder_details(args):
         raise UserNotFoundException()
 
     folder_id = args.get('folder_id')
-    permision = check_role(args.get('user_id'), folder_id)
-    if not permision['view']:
+    permision = get_role_of_user(args.get('user_id'), folder_id)
+    if not permision['viewable']:
         raise PermissionException("You are not allowed to view this folder.")
     es = FileElasticRepo()
     folder_details = es.get_children_of_folder(folder_id)
@@ -53,8 +55,10 @@ def folder_details(args):
         children_details = search({
             'file_id': children_id, 'basic_info': True, 'user_id': '1', **args
         })
+    del folder_details["children_id"]
     return {
         **folder_details,
+        **permision,
         "children_details": children_details['result']['files']
     }
 

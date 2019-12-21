@@ -43,9 +43,3 @@ def admin_required(fn):
         return fn(*arg, **kwargs)
 
     return wrapper
-
-
-def check_role(file_id, user_id):
-    from file_management.services.file import get_permision
-    ancestors = get_ancestors(str(file_id))
-    return get_permision(user_id, ancestors)
