@@ -4,7 +4,6 @@ from .utils import get_ancestors
 
 def update(file_id, **kwargs):
     from datetime import datetime
-
     update_body = {}
     fields = ['file_title', 'star', 'parent_id', 'share_mode', 'editable', 'users_shared',
               'children_id', 'description', 'file_tag', 'trashed']
@@ -24,10 +23,10 @@ def update(file_id, **kwargs):
                     """
                     If file is moved (i.e: changed parend_id), update size of old ancestors and new ancestors
                     """
-                    old_ancestors = set(get_ancestors(old_parent))
-                    new_ancestors = set(get_ancestors(new_parent))
-                    negotiate_size = list(old_ancestors.difference(new_ancestors))
-                    advance_size = list(new_ancestors.difference(old_ancestors))
+                    old_ancestors = set(get_ancestors(old_value))
+                    new_ancestors = set(get_ancestors(new_value))
+                    negotiate_size = list(old_ancestors.difference(new_value))
+                    advance_size = list(new_ancestors.difference(old_value))
 
                     update_size(negotiate_size, -1 * file['size'])  # Update old ancestors
                     update_size(advance_size, file['size'])  # Update new ancestors
