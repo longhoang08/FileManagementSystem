@@ -3,13 +3,13 @@ import logging
 
 from flask_jwt_extended import get_jwt_identity
 
+from file_management.helpers.check_role import user_required, owner_privilege_required, check_insert_privilege
 from file_management.extensions.custom_exception import UserNotFoundException, DiffParentException, \
     FileNotExistException, PermissionException
 from file_management.helpers.check_role import user_required, owner_privilege_required, get_email_in_jwt
 from file_management.repositories.files import FileElasticRepo
 from file_management.repositories.files import update
 from file_management.repositories import files
-from file_management import services, BadRequestException
 
 __author__ = 'LongHB'
 
@@ -123,3 +123,15 @@ def add_star(file_id):
 @user_required
 def remove_star(file_id):
     files.update.update(file_id, star=False)
+
+
+@user_required
+def move_file(file_id, new_parent):
+    try:
+        email = get_jwt_identity()
+        user_id = find_one_by_email(email).id
+    except Exception as e:
+        _logger.error(e)
+        raise UserNotFoundException()
+    check_insert_privilege(parent_id=new_parent, user_id=user_id)
+    files.update.update(file_id, parent_id=new_parent)
