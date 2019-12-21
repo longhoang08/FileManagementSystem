@@ -1,11 +1,12 @@
-from . import es
 from config import FILES_INDEX
 from .utils import get_ancestors
 from .update import update
+import datetime
 
 
-def insert(file_id, file_title, file_size, parent_id, user_id, mime_type, tags, starred=False, created_at=None,
-           updated_at=None):
+def insert(file_id, file_title, file_size, parent_id, user_id, mime_type, tags, thumbnail_url, starred=False,
+           created_at=datetime.datetime.now().strftime("%d/%m/%Y %I:%M:%S %p"),
+           updated_at=datetime.datetime.now().strftime("%d/%m/%Y %I:%M:%S %p")):
     document = {
         "file_id": file_id,
         "file_title": file_title,
@@ -14,6 +15,7 @@ def insert(file_id, file_title, file_size, parent_id, user_id, mime_type, tags, 
         "owner": user_id,
         "star": starred,
         "parent_id": parent_id,
+        "thumbnail_url": thumbnail_url,
         "children_id": [],
         "share_mode": 0,
         "editable": False,
@@ -24,6 +26,7 @@ def insert(file_id, file_title, file_size, parent_id, user_id, mime_type, tags, 
         "description": ""
     }
 
+    from file_management.repositories.files import es
     res = es.index(index=FILES_INDEX, body=document, id=file_id)
     ancestors = get_ancestors(parent_id)
 

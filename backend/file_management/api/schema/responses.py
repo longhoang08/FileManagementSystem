@@ -8,6 +8,7 @@ user_res = {
     'username': fields.String(description='user username'),
     'fullname': fields.String(description='fullname of user'),
     'avatar_url': fields.String(description='avatar url of user'),
+    'is_active': fields.Boolean(description='user is active or not')
 }
 
 pending_register_res = {
@@ -17,12 +18,12 @@ pending_register_res = {
 }
 
 log_field = api.model('log', {
-    'message' : fields.String(description="Message"),
+    'message': fields.String(description="Message"),
     'created_at': fields.DateTime(description="Created at")
 })
 
 notification_field = api.model('notification', {
-    'message' : fields.String(description="Message"),
+    'message': fields.String(description="Message"),
     'created_at': fields.DateTime(description="Create at")
 })
 
@@ -32,14 +33,13 @@ file_uploaded_res = {
     'file_size': fields.Integer(required=True, description="Filesize"),
     'parent_id': fields.String(required=True, description="Parent folder's id"),
     'user_id': fields.Integer(required=True, description="Owner id"),
-    'mime_type' : fields.String(required=True, description="MIME Type"),
-    'starred' : fields.Boolean(required=True, description="Is starred"),
-    'trashed' : fields.Boolean(required=True, description="Is trashed"),
-    'trashed_time' : fields.DateTime(description="Trashed date"),
-    'version' :fields.Integer(required=True, description="Version"),
-    'has_thumbnail' : fields.Boolean(required=True, description="Is Has thumbnail"),
-    'thumbnail_url' : fields.String(required=True, description="Thumbnail url"),
-    'shared' : fields.Boolean(required=True, description="Is shared")
-} 
-
-
+    'mime_type': fields.String(required=True, description="MIME Type"),
+    'starred': fields.Boolean(required=True, description="Is starred"),
+    'trashed': fields.Boolean(required=True, description="Is trashed"),
+    'trashed_time': fields.DateTime(description="Trashed date"),
+    'version': fields.Integer(required=True, description="Version"),
+    'has_thumbnail': fields.Boolean(required=True, description="Is Has thumbnail"),
+    'thumbnail_url': fields.String(required=True, description="Thumbnail url"),
+    'shared': fields.Boolean(required=True, description="Is shared"),
+    'tags': fields.String(required=True, description="Tags")
+}

@@ -18,7 +18,7 @@ def generate_image_tag(file_name):
 
     image = types.Image(content=content)
 
-    # Performs label detection on the image file
+    # Performs label detection on the image files
     response = client.label_detection(image=image)
     labels = response.label_annotations
     lb = [label.description for label in labels]

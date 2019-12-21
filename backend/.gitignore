@@ -78,7 +78,7 @@ target/
 # pyenv
 .python-version
 
-# celery beat schedule file
+# celery beat schedule files
 celerybeat-schedule
 
 # SageMath parsed files
@@ -106,4 +106,4 @@ ENV/
 .mypy_cache/
 /.pytest_cache/
 /docker-compose.override.yml
-
+fake_HDD

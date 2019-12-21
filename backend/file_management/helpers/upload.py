@@ -1,4 +1,5 @@
 import uuid
+from flask import send_file, url_for
 import mimetypes
 import subprocess
 from file_management.constant import link, pathconst
@@ -9,11 +10,11 @@ def generate_file_id(user_id):
     """Generate unique file_id """
     randomString = uuid.uuid4().hex
     randomString = randomString.upper()
-    return user_id + '-' + randomString
+    return str(user_id) + '-' + randomString
 
 
 def get_mime_type(file_name):
-    """Get mimetype from file name. Str return should be "image/jpeg" """
+    """Get mimetype from files name. Str return should be "image/jpeg" """
     return mimetypes.MimeTypes().guess_type(file_name)[0]
 
 
@@ -44,7 +45,7 @@ def get_thumbnail_url(file_id, file_name, path_upload):
     if not is_has_thumbail(file_name):
         return link.DEFAULT_THUMBNAIL
     elif "image" in mime:
-        return gen_thumbnail(file_id, path_upload)
+        return  gen_thumbnail(file_id, path_upload)
     elif "video" in mime:
         return gen_video_thumbnail(file_id, path_upload)
     elif "pdf" in mime:
