@@ -13,7 +13,7 @@ __author__ = 'LongHB'
 from file_management.repositories.files.utils import get_role_of_user
 
 from file_management.repositories.user import find_one_by_email
-from file_management.services.file import extract_file_data_from_response, get_permision
+from file_management.services.file import extract_file_data_from_response
 
 _logger = logging.getLogger(__name__)
 

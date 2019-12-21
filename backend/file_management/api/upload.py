@@ -14,6 +14,7 @@ from . import responses
 from file_management import helpers
 from ..helpers.check_role import user_required
 from ..repositories.files import utils
+from file_management.helpers.check_role import check_insert_privilege
 
 __author__ = 'Dang'
 
@@ -44,6 +45,11 @@ class Upload(flask_restplus.Resource):
             raise UserNotFoundException()
 
         parent_id = request.form['parent_id']
+
+        ############################### CHECK INSERT PRIVILEGE ##########################
+        check_insert_privilege(user_id=user_id, parent_id=parent_id)
+        #################################### END CHECKING ###############################
+
         fi = request.files.get('in_file')
 
         folders = utils.get_ancestors(parent_id)

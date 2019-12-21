@@ -51,3 +51,12 @@ folder_create_req = {
 switch_block_user_req = {
     'email': fields.String(required=True, description='Email need to block')
 }
+
+trash_req = {
+    'file_ids': fields.List(fields.String, required=True)
+}
+
+star_req = {
+    'file_id': fields.String(required=True)
+}
+

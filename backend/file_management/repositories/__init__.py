@@ -13,3 +13,4 @@ from . import notification
 from . import upload
 from . import download
 from . import admin
+from . import files
