@@ -6,6 +6,7 @@ from flask_jwt_extended import get_jwt_identity
 from file_management.extensions.custom_exception import UserNotFoundException, DiffParentException
 from file_management.helpers.check_role import user_required, owner_privilege_required, get_email_in_jwt
 from file_management.repositories.files import FileElasticRepo
+from file_management.repositories.files import update
 from file_management.repositories import files
 from file_management import services
 
@@ -34,6 +35,30 @@ def extract_file_data_from_response(responses):
     return {'result': {'files': files}}
 
 
+
+@user_required
+def share(args):
+ 
+    try:
+        email = get_jwt_identity()
+        args['user_id'] = find_one_by_email(email).id
+    except Exception as e:
+        _logger.error(e)
+        raise UserNotFoundException()
+    user_shared = [str(find_one_by_email(mail).id) for mail in args['emails']]
+
+    file_id = args['file_id']
+    if args['private']:
+        share_mode = 0
+        return update.update(file_id, share_mode=share_mode) #private
+    elif args['share_by_link']:
+        share_mode = 1
+        return update.update(file_id, share_mode=share_mode, users_shared=users_shared) #custom
+    else:
+        share_mode = 2
+        return update.update(file_id, share_mode=share_mode) #public
+    
+@owner_privilege_required
 def move2trash(file_ids=None):
     """
     Move files to trash
