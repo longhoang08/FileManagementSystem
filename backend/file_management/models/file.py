@@ -37,7 +37,7 @@ mappings = {
         },
         "trashed_time": {
             "type": "date",
-            "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis"
+            "format": "date_optional_time||dd/MM/yyyy hh:mm:ss a"
         },
         "file_title": {
             "type": "text",

@@ -36,9 +36,9 @@ def init_app(app, **kwargs):
         db=app.config['SQLALCHEMY_DATABASE_URI']
     ))
     redis_client.init_app(app)
-    # from file_management.repositories.file import FileElasticRepo
-    # es = FileElasticRepo()
-    # es.create_index_if_not_exist()
+    from file_management.repositories.file import FileElasticRepo
+    es = FileElasticRepo()
+    es.create_index_if_not_exist()
 
 
 from .base import TimestampMixin
