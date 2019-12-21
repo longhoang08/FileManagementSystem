@@ -8,6 +8,7 @@ from file_management.services import preview
 from ..repositories.files import utils
 from file_management.constant import mime
 from file_management.helpers.check_role import view_privilege_required
+from file_management import repositories
 
 __author__ = 'LongHB'
 _logger = logging.getLogger(__name__)
@@ -15,11 +16,12 @@ _logger = logging.getLogger(__name__)
 ns = Namespace('preview', description='Get docs, zip, image preview')
 
 
-@ns.route('/<mime_type>/<file_id>', methods=['GET'])
+@ns.route('/<file_id>', methods=['GET'])
 class Get_preview(flask_restplus.Resource):
     @view_privilege_required
-    def get(self, file_id, mime_type):
+    def get(self, file_id):
         "Get docs, zip, image preview. return path to files image or json or pdf"
+        mime_type = repositories.files.utils.get_file(file_id)["file_type"]
         folders = utils.get_ancestors(file_id)
         file_path = '/'.join(folders)
 

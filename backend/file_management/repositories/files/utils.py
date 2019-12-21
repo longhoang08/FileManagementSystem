@@ -66,6 +66,6 @@ def get_descendants(file_id):
 def get_file(file_id):
     from file_management.repositories.files import es
     if es.exists(index=FILES_INDEX, id=file_id):
-        return es.get_source(index=FILES_INDEX, id=cur_id)
+        return es.get_source(index=FILES_INDEX, id=file_id)
     else:
         return None
