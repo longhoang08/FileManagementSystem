@@ -110,7 +110,7 @@ class RemoveStar(flask_restplus.Resource):
         """
         Remove star for a file
         """
-        args = request.args or requests.json
+        args = request.args or request.json
         file_id = args.get('file_id')
         services.file.remove_star(file_id)
         return {
