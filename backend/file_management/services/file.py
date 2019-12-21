@@ -40,17 +40,17 @@ def extract_file_data_from_response(responses):
     return {'result': {'files': files}}
 
 
+
 @user_required
 def share(args):
-    _logger.log(level = 1, msg = " Day la share")
+ 
     try:
         email = get_jwt_identity()
         args['user_id'] = find_one_by_email(email).id
     except Exception as e:
         _logger.error(e)
         raise UserNotFoundException()
-    users_shared = [str(find_one_by_email(mail).id) for mail in args['emails']]
-    _logger.log(level = 1,msg= str(users_shared))
+    user_shared = [str(find_one_by_email(mail).id) for mail in args['emails']]
 
     file_id = args['file_id']
     if args['private']:
@@ -74,7 +74,7 @@ def move2trash(file_ids=None):
         return "Nothing to move!"
     parent_of_first_file = files.utils.get_file(file_ids[0])['parent_id']
     for file_id in file_ids:
-        parent_id = files.utils.get_file(file_id)['parent_id']
+        parent_id = files.utils.get_file(file_ids[0])['parent_id']
         if parent_id != parent_of_first_file:
             """
             All file must have same parent_id, else throws Exception
