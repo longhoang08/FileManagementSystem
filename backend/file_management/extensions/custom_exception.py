@@ -121,3 +121,7 @@ class CannotDownloadFile(HTTPException):
 class DiffParentException(HTTPException):
     def __init__(self, message=message.PARENT_DIFF, errors=None):
         super().__init__(code=400, message=message, errors=errors, custom_code='can_not_move_files_to_trash')
+
+class FileNotExistException(HTTPException):
+    def __init__(self, message="File/folder not exists", errors=None):
+        super().__init__(code=400, message=message, errors=errors, custom_code='file_not_exist')
