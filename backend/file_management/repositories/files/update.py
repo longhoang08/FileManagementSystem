@@ -8,6 +8,8 @@ def update(file_id, **kwargs):
     fields = ['file_title', 'star', 'parent_id', 'share_mode', 'editable', 'users_shared',
               'children_id', 'description', 'file_tag', 'trashed']
     from file_management.repositories.files import es
+    if not es.exists(index=FILES_INDEX, id=file_id):
+        return True
     file = es.get_source(index=FILES_INDEX, id=file_id)
     for field in fields:
         if field in kwargs:
@@ -40,7 +42,6 @@ def update(file_id, **kwargs):
                     update_size(ancestors, sign * file['size'])
                 update_body[field] = new_value
                 update_body['updated_at'] = datetime.now()
-
     es.indices.refresh(index=FILES_INDEX)
     res = es.update(
         index=FILES_INDEX,

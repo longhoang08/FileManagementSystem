@@ -47,7 +47,9 @@ def move2trash(file_ids=None):
         return "Only accept `list` datatype"
     if len(file_ids) == 0:
         return "Nothing to move!"
-    parent_of_first_file = files.utils.get_file(file_ids[0])['parent_id']
+
+    parent_of_first_file = files.utils.get_file(file_ids[0])
+    parent_of_first_file = parent_of_first_file['parent_id']
     for file_id in file_ids:
         parent_id = files.utils.get_file(file_ids[0])['parent_id']
         if parent_id != parent_of_first_file:
@@ -72,6 +74,12 @@ def restore_files(file_ids=None):
     if not file_ids:
         return "Nothing to restore!"
     for file_id in file_ids:
+        file = files.utils.get_file(file_id)
+        if not file['trashed']:
+            continue
+        parent_id = file['parent_id']
+        parent_new_children = files.utils.add_child(file_id=parent_id, child_id=file_id)
+        files.update.update(parent_id, children_id=parent_new_children)
         files.update.update(file_id, trashed=False)
     return True
 
@@ -104,4 +112,12 @@ def move_file(file_id, new_parent):
         _logger.error(e)
         raise UserNotFoundException()
     check_insert_privilege(parent_id=new_parent, user_id=user_id)
-    files.update.update(file_id, parent_id=new_parent)
+    file = files.utils.get_file(file_id)
+    if file is None:
+        raise FileNotFoundError()
+    old_parent_new_children = files.utils.remove_child(file_id=file['parent_id'], child_id=file_id)
+    new_parent_new_children = files.utils.add_child(file_id=new_parent, child_id=file_id)
+
+    files.update.update(file['parent_id'], children_id=old_parent_new_children)  # Update old parent
+    files.update.update(new_parent, children_id=new_parent_new_children)  # Update new parent
+    files.update.update(file_id, parent_id=new_parent)  # Update itself

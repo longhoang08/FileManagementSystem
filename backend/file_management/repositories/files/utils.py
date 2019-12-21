@@ -69,3 +69,23 @@ def get_file(file_id):
         return es.get_source(index=FILES_INDEX, id=file_id)
     else:
         return None
+
+
+def remove_child(file_id, child_id):
+    file = get_file(file_id)
+    if file is None:
+        return None
+    children_id = file['children_id']
+    if child_id in children_id:
+        children_id.remove(child_id)
+    return children_id
+
+
+def add_child(file_id, child_id):
+    file = get_file(file_id)
+    if file is None:
+        raise FileNotFoundError()
+    children_id = file['children_id']
+    if child_id not in children_id:
+        children_id.append(child_id)
+    return children_id
