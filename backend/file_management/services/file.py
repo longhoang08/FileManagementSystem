@@ -42,23 +42,26 @@ def extract_file_data_from_response(responses):
 
 @user_required
 def share(args):
+    _logger.log(level = 1, msg = " Day la share")
     try:
         email = get_jwt_identity()
         args['user_id'] = find_one_by_email(email).id
     except Exception as e:
         _logger.error(e)
         raise UserNotFoundException()
-    user_shared = [find_one_by_email(email).id for email in args['emails']]
+    user_shared = [str(find_one_by_email(mail).id) for mail in args['emails']]
+    _logger.log(level = 1,msg= str(user_shared))
+
     file_id = args['file_id']
     if args['private']:
         share_mode = 0
-        return update.update(file_id, share_mode=share_mode)
+        return update.update(file_id, share_mode=share_mode) #private
     elif args['share_by_link']:
         share_mode = 1
-        return update.update(file_id, share_mode=share_mode, user_shared=user_shared)
+        return update.update(file_id, share_mode=share_mode, user_shared=user_shared) #custom
     else:
         share_mode = 2
-        return update.update(file_id, share_mode=share_mode)
+        return update.update(file_id, share_mode=share_mode) #public
     
 @owner_privilege_required
 def move2trash(file_ids=None):

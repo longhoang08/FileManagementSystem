@@ -33,7 +33,6 @@ class Upload(flask_restplus.Resource):
     parser.add_argument('in_file', type=FileStorage, location='files')
     parser.add_argument('parent_id', type=str, help='parent_id')
 
-    @ns.marshal_with(_upload_res)
     @ns.expect(parser, validate=True)
     @user_required
     def put(self):
