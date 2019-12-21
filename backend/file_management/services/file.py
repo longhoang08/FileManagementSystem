@@ -49,8 +49,8 @@ def share(args):
     except Exception as e:
         _logger.error(e)
         raise UserNotFoundException()
-    user_shared = [str(find_one_by_email(mail).id) for mail in args['emails']]
-    _logger.log(level = 1,msg= str(user_shared))
+    users_shared = [str(find_one_by_email(mail).id) for mail in args['emails']]
+    _logger.log(level = 1,msg= str(users_shared))
 
     file_id = args['file_id']
     if args['private']:
@@ -58,7 +58,7 @@ def share(args):
         return update.update(file_id, share_mode=share_mode) #private
     elif args['share_by_link']:
         share_mode = 1
-        return update.update(file_id, share_mode=share_mode, user_shared=user_shared) #custom
+        return update.update(file_id, share_mode=share_mode, users_shared=users_shared) #custom
     else:
         share_mode = 2
         return update.update(file_id, share_mode=share_mode) #public
