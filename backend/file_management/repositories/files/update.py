@@ -37,6 +37,7 @@ def update(file_id, **kwargs):
                     """
                     ancestors = get_ancestors(file['parent_id'])
                     sign = -1 if new_value else 1
+                    update_body[field] = datetime.now()
                     update_size(ancestors, sign * file['size'])
                 update_body[field] = new_value
                 update_body['updated_at'] = datetime.now()
