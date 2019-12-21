@@ -38,6 +38,7 @@ file_details_req = {
     '_limit': fields.Integer(required=False, description='Limit each page', default=12),
     '_page': fields.Integer(required=False, description='Page-th', defalt=1),
 }
+
 folder_details_req = {
     'folder_id': fields.String(required=False, description='folder_id')
 }
@@ -58,6 +59,7 @@ share_req = {
     'share_by_link': fields.Boolean(required=False, default=False),
     'private': fields.Boolean(required=False, default=False)
 }
+
 trash_req = {
     'file_ids': fields.List(fields.String, required=True)
 }
