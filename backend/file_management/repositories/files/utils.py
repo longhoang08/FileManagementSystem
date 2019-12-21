@@ -44,7 +44,6 @@ def get_ancestors(file_id):
 
 
 def extract_result(response, has_string_query=True):
-    from file_management.repositories.files import es
     results = []
     for doc in response:
         if has_string_query and doc['_score'] > 0:
@@ -62,3 +61,11 @@ def get_descendants(file_id):
     for child in children:
         descendants += get_descendants(child)
     return descendants
+
+
+def get_file(file_id):
+    from file_management.repositories.files import es
+    if es.exists(index=FILES_INDEX, id=file_id):
+        return es.get_source(index=FILES_INDEX, id=cur_id)
+    else:
+        return None
