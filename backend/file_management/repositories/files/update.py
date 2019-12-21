@@ -87,3 +87,6 @@ def update_size(old_parent, new_parent, file_size):
             }
         }
     )
+
+def update_share(file_id, users_shared = [], share_mode = 0, **kwargs):
+    return update(file_id, users_shared, share_mode, **kwargs)

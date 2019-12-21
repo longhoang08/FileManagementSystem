@@ -61,7 +61,16 @@ class GetFiles(flask_restplus.Resource):
             args = {}
         return services.file.search(args)
 
+_file_share_req = ns.model('file_share_request', request.share_req)
 
+@ns.route('/share', methods=['POST'])
+class GetFiles(flask_restplus.Resource):
+    @ns.expect(_file_share_req, validate=True)
+    def post(self):
+        args = request.args or request.json
+        if not args:
+            args = {}
+        return services.file.share(args)
 
 
 
