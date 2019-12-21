@@ -87,7 +87,7 @@ _file_share_req = ns.model('file_share_request', requests.share_req)
 _star_req = ns.model('Add Star Request', requests.star_req)
 
 @ns.route('/share', methods=['POST'])
-class GetFiles(flask_restplus.Resource):
+class ShareFile(flask_restplus.Resource):
     @ns.expect(_file_share_req, validate=True)
     def post(self):
         args = request.args or request.json
