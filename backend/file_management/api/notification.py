@@ -5,6 +5,7 @@ import flask_restplus
 
 from file_management.extensions import Namespace
 from file_management.services.notification import get_notification
+from file_management.helpers.check_role import user_required
 from . import responses
 
 _logger = logging.getLogger(__name__)
@@ -15,6 +16,7 @@ _change_res = ns.model('notifications_res', responses.notification_field)
 
 @ns.route('/<user_id>', methods=['GET'])
 class Get_notification(flask_restplus.Resource):
+    @user_required
     @ns.marshal_list_with(_change_res)
     def get(self):
         """ Notify to user """
