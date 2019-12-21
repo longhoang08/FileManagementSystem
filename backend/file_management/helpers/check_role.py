@@ -6,6 +6,15 @@ from file_management import models
 from file_management.repositories.files.utils import get_ancestors, get_role_of_user
 
 
+def get_email_in_jwt():
+    try:
+        verify_jwt_in_request()
+        email = get_jwt_identity()
+        return email
+    except Exception as e:
+        return None
+
+
 def user_required(fn):
     """
     Check user role,

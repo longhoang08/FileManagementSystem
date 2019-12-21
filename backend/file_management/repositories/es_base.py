@@ -19,7 +19,6 @@ def get_update_body_query(data):
 
 class EsRepositoryInterface:
     def __init__(self):
-        print(ELASTIC_HOST)
         self.es = Elasticsearch(ELASTIC_HOST)
         self._index = None
         self.id_key = ''

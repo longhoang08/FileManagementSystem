@@ -30,14 +30,15 @@ download_file_req = {
 }
 file_details_req = {
     'q': fields.String(required=False, description='Search text'),
-    'user_id': fields.String(required=False, description='Search text'),
-    'basic_info': fields.Boolean(required=False, description='Only get basic info of file'),
+    'file_id': fields.String(required=False, description='id of file to get details'),
+    'basic_info': fields.Boolean(required=False, description='Only get basic info of file', default=False),
     'only_photo': fields.Boolean(required=False, description='Only get photo'),
     'star': fields.Boolean(required=False, description='Only get star'),
     'trash': fields.Boolean(required=False, description='Only get file in trash'),
-    '_limit': fields.Integer(required=False, description='Limit each page'),
-    '_page': fields.Integer(required=False, description='Page-th'),
+    '_limit': fields.Integer(required=False, description='Limit each page', default=12),
+    '_page': fields.Integer(required=False, description='Page-th', defalt=1),
 }
+
 folder_details_req = {
     'folder_id': fields.String(required=False, description='folder_id')
 }
@@ -52,6 +53,13 @@ switch_block_user_req = {
     'email': fields.String(required=True, description='Email need to block')
 }
 
+share_req = {
+    'file_id': fields.String(required=True, description='File_id'),
+    'emails': fields.List(fields.String, required=False),
+    'share_by_link': fields.Boolean(required=False, default=False),
+    'private': fields.Boolean(required=False, default=False)
+}
+
 trash_req = {
     'file_ids': fields.List(fields.String, required=True)
 }
@@ -59,4 +67,3 @@ trash_req = {
 star_req = {
     'file_id': fields.String(required=True)
 }
-

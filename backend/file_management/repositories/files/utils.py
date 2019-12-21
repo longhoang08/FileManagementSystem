@@ -5,7 +5,6 @@ from file_management.constant import pathconst
 def get_role_of_user(user_id, file_id):
     from file_management.repositories.files import es
     cur_id = file_id
-    user_id = str(user_id)
     viewable = False
     editable = False
     is_owner = False
@@ -17,7 +16,7 @@ def get_role_of_user(user_id, file_id):
             viewable = True
             if cur_file['editable'] == True:
                 editable = True
-        if cur_file['share_mode'] == 1:
+        if cur_file['share_mode'] == 2:
             viewable = True
         if is_owner: break
         cur_id = cur_file['parent_id']
@@ -69,3 +68,8 @@ def get_file(file_id):
         return es.get_source(index=FILES_INDEX, id=file_id)
     else:
         return None
+
+
+def is_this_file_exists(file_id):
+    from file_management.repositories.files import es
+    return es.exists(index=FILES_INDEX, id=file_id)
