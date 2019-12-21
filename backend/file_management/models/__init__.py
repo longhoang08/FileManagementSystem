@@ -21,7 +21,7 @@ db = _fs.SQLAlchemy()
 migrate = _fm.Migrate(db=db)
 bcrypt = _fb.Bcrypt()
 redis_client = FlaskRedis()
-#Create mock redis for unit test
+# Create mock redis for unit test
 if get_environ('IS_TESTING_ENV') == 'True':
     redis_client = FlaskRedis.from_custom_provider(MockRedis)
 
@@ -30,11 +30,15 @@ def init_app(app, **kwargs):
     db.app = app
     db.init_app(app)
     migrate.init_app(app)
+
     _logger.info('Start app in {env} environment with database: {db}'.format(
         env=app.config['ENV_MODE'],
         db=app.config['SQLALCHEMY_DATABASE_URI']
     ))
     redis_client.init_app(app)
+    from file_management.repositories.file import FileElasticRepo
+    es = FileElasticRepo()
+    es.create_index_if_not_exist()
 
 
 from .base import TimestampMixin
