@@ -5,8 +5,8 @@ import datetime
 
 
 def insert(file_id, file_title, file_size, parent_id, user_id, mime_type, tags, thumbnail_url, starred=False,
-           created_at=datetime.datetime.now().strftime("%d/%m/%Y %X %p"),
-           updated_at=datetime.datetime.now().strftime("%d/%m/%Y %X %p")):
+           created_at=datetime.datetime.now().strftime("%d/%m/%Y %I:%M:%S %p"),
+           updated_at=datetime.datetime.now().strftime("%d/%m/%Y %I:%M:%S %p")):
     document = {
         "file_id": file_id,
         "file_title": file_title,
