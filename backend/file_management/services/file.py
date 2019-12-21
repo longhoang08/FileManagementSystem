@@ -4,7 +4,7 @@ import logging
 from flask_jwt_extended import get_jwt_identity
 
 from file_management.extensions.custom_exception import UserNotFoundException, DiffParentException
-from file_management.helpers.check_role import user_required, owner_privilege_required
+from file_management.helpers.check_role import user_required, owner_privilege_required, get_email_in_jwt
 from file_management.repositories.files import FileElasticRepo
 from file_management.repositories import files
 from file_management import services
@@ -16,15 +16,10 @@ from file_management.repositories.user import find_one_by_email
 _logger = logging.getLogger(__name__)
 
 
-@user_required
 def search(args):
-    try:
-        email = get_jwt_identity()
+    email = get_email_in_jwt()
+    if email:
         args['user_id'] = find_one_by_email(email).id
-    except Exception as e:
-        _logger.error(e)
-        raise UserNotFoundException()
-
     file_es = FileElasticRepo()
     response = file_es.search(args)
     return extract_file_data_from_response(response)

@@ -43,6 +43,8 @@ class FileElasticRepo(EsRepositoryInterface):
             else:
                 conditions.append(query.Term(file_id=file_id))
         search_text = args.get('q')
+        if file_id and search_text:
+            raise BadRequestException("Not support both q and file_id param")
         if search_text:
             conditions.append(query.DisMax(queries=[
                 query.MatchPhrasePrefix(file_title={
@@ -65,21 +67,22 @@ class FileElasticRepo(EsRepositoryInterface):
         return conditions
 
     def build_filter_condions(self, args):
-        if not args.get('user_id'):
-            raise BadRequestException("Required user id in arguments")
+
         must_conditions = []
-        must_conditions.append(query.Term(owner=args.get('user_id')))
         must_conditions.append(query.Bool(
             should=[
                 query.Term(trashed=False),
                 query.Bool(must_not=query.Exists(field="trashed"))
             ] if not args.get('trash') else [query.Term(trashed=True)]
         ))
-        if args.get('star'):
-            must_conditions.append(query.Term(star=True))
-        if args.get('only_photo'):
-            must_conditions.append(query.Prefix(file_type={'value': 'image'}))
-
+        if not args.get('user_id'):
+            must_conditions.append(query.Term(share_mode={'value': 2}))
+        else:
+            must_conditions.append(query.Term(owner=args.get('user_id')))
+            if args.get('star'):
+                must_conditions.append(query.Term(star=True))
+            if args.get('only_photo'):
+                must_conditions.append(query.Prefix(file_type={'value': 'image'}))
         return query.Bool(must=must_conditions)
 
     def get_children_of_folder(self, folder_id):
