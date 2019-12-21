@@ -3,8 +3,8 @@ import logging
 import datetime
 from file_management import repositories as repo
 from file_management import helpers
-from file_management.repositories.files import insert
-from ..repositories.files import utils
+from file_management.repositories.files import insert, utils
+from file_management.extensions.custom_exception import PermissionException
 
 __author__ = 'Dang'
 _logger = logging.getLogger(__name__)

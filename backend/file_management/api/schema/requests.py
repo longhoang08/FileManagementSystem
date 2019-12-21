@@ -58,3 +58,11 @@ share_req = {
     'share_by_link': fields.Boolean(required=False, default=False),
     'private': fields.Boolean(required=False, default=False)
 }
+trash_req = {
+    'file_ids': fields.List(fields.String, required=True)
+}
+
+star_req = {
+    'file_id': fields.String(required=True)
+}
+
