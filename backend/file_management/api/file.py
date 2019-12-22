@@ -9,6 +9,9 @@ from file_management.api.schema import requests
 from file_management.extensions import Namespace
 
 __author__ = 'jian'
+
+from file_management.helpers.transformer import format_details_args
+
 _logger = logging.getLogger(__name__)
 
 ns = Namespace('files', description='File operations')
@@ -21,8 +24,7 @@ class GetFiles(flask_restplus.Resource):
     @ns.expect(_file_details_req, validate=True)
     def post(self):
         args = request.args or request.json
-        if not args:
-            args = {}
+        format_details_args(args)
         return services.file.search(args)
 
 
