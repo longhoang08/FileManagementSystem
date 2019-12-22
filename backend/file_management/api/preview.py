@@ -3,13 +3,13 @@ import logging
 
 import flask_restplus
 from flask import send_file
-from file_management.extensions import Namespace
-from file_management.services import preview
-from ..extensions.custom_exception import PermissionException
-from ..repositories.files import utils
-from file_management.constant import mime
-from file_management.helpers.check_role import view_privilege_required, get_email_in_jwt, viewable_required
+
 from file_management import repositories
+from file_management.constant import mime
+from file_management.extensions import Namespace
+from file_management.helpers.check_role import viewable_check
+from file_management.services import preview
+from ..repositories.files import utils
 
 __author__ = 'LongHB'
 
@@ -20,10 +20,9 @@ ns = Namespace('preview', description='Get docs, zip, image preview')
 
 @ns.route('/<file_id>', methods=['GET'])
 class Get_preview(flask_restplus.Resource):
-    @viewable_required
     def get(self, file_id):
         "Get docs, zip, image preview. return path to files image or json or pdf"
-
+        viewable_check(file_id)
         mime_type = repositories.files.utils.get_file(file_id)["file_type"]
         folders = utils.get_ancestors(file_id)
         file_path = '/'.join(folders)
