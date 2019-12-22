@@ -41,7 +41,7 @@ def update(file_id, **kwargs):
                     update_body[field] = datetime.now()
                     update_size(ancestors, sign * file['size'])
                 update_body[field] = new_value
-                update_body['updated_at'] = datetime.now()
+                update_body['updated_at'] = datetime.now().strftime("%d/%m/%Y %I:%M:%S %p")
     es.indices.refresh(index=FILES_INDEX)
     res = es.update(
         index=FILES_INDEX,
