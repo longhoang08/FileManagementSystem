@@ -6,9 +6,7 @@ from flask import request
 
 from file_management import services
 from file_management.api.schema import requests
-from file_management.repositories import files
 from file_management.extensions import Namespace
-from file_management.helpers.check_role import view_privilege_required, edit_privilege_required
 
 __author__ = 'jian'
 _logger = logging.getLogger(__name__)
@@ -79,7 +77,7 @@ class PermanentlyDelete(flask_restplus.Resource):
         args = request.args or request.json
         if not args:
             args = {}
-        res = files.delete.delete(**args)
+        res = services.file.drop_out(**args)
         return res
 
 
@@ -127,3 +125,18 @@ class RemoveStar(flask_restplus.Resource):
         }
 
 
+_move_req = ns.model('Move Request', requests.move_req)
+
+
+@ns.route('/move', methods=['POST'])
+class MoveFile(flask_restplus.Resource):
+    @ns.expect(_move_req, validate=True)
+    @ns.marshal_with(_status_res)
+    def post(self):
+        """
+        Move file to a another folder as long as user has privileges, else throw Exception!
+        """
+        services.file.move_file(**request.json)
+        return {
+            "status": True
+        }
