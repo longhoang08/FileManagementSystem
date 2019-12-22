@@ -138,7 +138,7 @@ class MoveFile(flask_restplus.Resource):
         """
         Move file to a another folder as long as user has privileges, else throw Exception!
         """
-        services.file.move_file(**request.json)
+        services.file.move_files(**request.json)
         return {
             "status": True
         }
