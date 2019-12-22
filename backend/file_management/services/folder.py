@@ -4,13 +4,14 @@ import logging
 from flask_jwt_extended import get_jwt_identity
 
 from file_management import helpers
-from file_management.extensions.custom_exception import UserNotFoundException, PermissionException
+from file_management.extensions.custom_exception import UserNotFoundException, PermissionException, \
+    ParentFolderNotExistException
 from file_management.helpers.check_role import user_required, get_email_in_jwt
 from file_management.repositories.files import FileElasticRepo, insert
 
 __author__ = 'LongHB'
 
-from file_management.repositories.files.utils import get_role_of_user
+from file_management.repositories.files.utils import get_role_of_user, is_this_file_exists
 
 from file_management.repositories.user import find_one_by_email
 from file_management.services.file import extract_file_data_from_response
@@ -70,5 +71,9 @@ def create_folder(args):
     except Exception as e:
         _logger.error(e)
         raise UserNotFoundException()
+    if not is_this_file_exists(parent_id):
+        raise ParentFolderNotExistException()
+
     file_id = helpers.generate_file_id(user_id)
+
     return insert.insert(file_id, file_title, 0, parent_id, user_id, "folder", "", "", starred=False)

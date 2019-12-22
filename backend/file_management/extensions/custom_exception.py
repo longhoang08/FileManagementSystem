@@ -125,9 +125,9 @@ class DiffParentException(HTTPException):
 
 class FileNotExistException(HTTPException):
     def __init__(self, message="File/folder not exists", errors=None):
-        super().__init__(code=400, message=message, errors=errors, custom_code='file_not_exist')
+        super().__init__(code=404, message=message, errors=errors, custom_code='file_not_exist')
 
 
-class FileNotExistException(HTTPException):
-    def __init__(self, message="File/folder not exists", errors=None):
-        super().__init__(code=400, message=message, errors=errors, custom_code='file_not_exist')
+class ParentFolderNotExistException(HTTPException):
+    def __init__(self, message="Parent folder not exists", errors=None):
+        super().__init__(code=404, message=message, errors=errors, custom_code='file_not_exist')
