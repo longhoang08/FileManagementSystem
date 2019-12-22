@@ -6,13 +6,14 @@ from elasticsearch_dsl import query, Search
 
 from config import FILES_INDEX
 from file_management import BadRequestException
+from file_management.extensions.custom_exception import NotFolderException, FolderNotExistException
 from file_management.models.file import mappings, settings
 from file_management.repositories.es_base import EsRepositoryInterface
 
 __author__ = 'LongHB'
 _logger = logging.getLogger(__name__)
 
-FOLDER_DETAILS = ["star", "owner", "editable", "created_at", "description", "children_id"]
+FOLDER_DETAILS = ["file_type", "star", "owner", "editable", "created_at", "description", "children_id"]
 BASIC_INFOS = ['owner', 'file_title', 'star', 'updated_at', 'file_type', 'file_id', "thumbnail_url", "size"]
 
 
@@ -89,10 +90,12 @@ class FileElasticRepo(EsRepositoryInterface):
     def get_children_of_folder(self, folder_id):
         try:
             response = self.es.get(self._index, folder_id, _source=FOLDER_DETAILS)['_source']
+            if response.get('file_type') != 'folder':
+                raise NotFolderException()
             return response
         except Exception as e:
             _logger.error(e)
-            raise BadRequestException('Folder not exist')
+            raise FolderNotExistException()
 
     def build_file_query(self, args):
         """

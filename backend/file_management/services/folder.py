@@ -12,10 +12,11 @@ from file_management.repositories.files import FileElasticRepo, insert
 
 __author__ = 'LongHB'
 
-from file_management.repositories.files.utils import get_role_of_user, is_this_file_exists
+from file_management.repositories.files.utils import get_role_of_user, is_this_file_exists, get_parse_url
 
 from file_management.repositories.user import find_one_by_email
 from file_management.services.file import extract_file_data_from_response
+from file_management.services.user import get_user_name_by_user_id
 
 _logger = logging.getLogger(__name__)
 
@@ -55,11 +56,17 @@ def folder_details(args):
             'file_id': children_id, 'basic_info': True, 'user_id': '1', **args
         })
     del folder_details["children_id"]
+    folder_owner_id = folder_details.get('owner')
+    folder_details['owner'] = {
+        'id': folder_owner_id,
+        'name': get_user_name_by_user_id(folder_owner_id)
+    }
     children_details = children_details['result']['files']
     add_user_name_to_files(children_details)
     return {
         **folder_details,
         **permision,
+        'parse_urls': get_parse_url(folder_id, args.get('user_id')),
         "children_details": children_details
     }
 

@@ -95,3 +95,25 @@ def add_child(file_id, child_id):
 def is_this_file_exists(file_id):
     from file_management.repositories.files import es
     return es.exists(index=FILES_INDEX, id=file_id)
+
+
+def get_parse_url(folder_id, user_id):
+    from file_management.repositories.files import es
+    pending_urls = []
+    parse_urls = []
+    cur_id = folder_id
+    if user_id:
+        user_id = str(user_id)
+
+    while es.exists(index=FILES_INDEX, id=cur_id):
+        cur_file = es.get_source(index=FILES_INDEX, id=cur_id)
+        pending_urls.append({'id': cur_id, 'title': cur_file.get('file_title')})
+        viewable = False
+        viewable |= cur_file['owner'] == user_id
+        viewable |= cur_file['share_mode'] == 1 and user_id in cur_file['children_id']
+        viewable |= cur_file['share_mode'] == 2
+        if viewable:
+            parse_urls += pending_urls
+            pending_urls.clear()
+        cur_id = cur_file['parent_id']
+    return parse_urls[::-1]
