@@ -62,12 +62,12 @@ def share(args):
 
     if args.get('private'):
         share_mode = 0
-        return update.update(file_id, share_mode=share_mode).get('result')  # private
-    elif args.get('emails'):
+        return update.update(file_id, share_mode=share_mode, users_shared=[]).get('result')  # private
+    elif args.get('share_by_link'):
         share_mode = 1
         users_shared = [str(find_one_by_email(mail).id) for mail in args['emails']]
         return update.update(file_id, share_mode=share_mode, users_shared=users_shared).get('result')  # custom
-    elif args.get('share_by_link'):
+    elif not args.get('share_by_link') and args.get('private'):
         share_mode = 2
         return update.update(file_id, share_mode=share_mode).get('result')  # public
 
