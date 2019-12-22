@@ -39,6 +39,11 @@ file_details_req = {
     '_page': fields.Integer(required=False, description='Page-th', defalt=1),
 }
 
+move_req = {
+    'file_id': fields.String(required=False, description='file_id'),
+    'new_parent': fields.String(required=False, description='new parent id')
+}
+
 folder_details_req = {
     'folder_id': fields.String(required=False, description='folder_id')
 }
