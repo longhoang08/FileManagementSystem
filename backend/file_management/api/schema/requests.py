@@ -78,3 +78,7 @@ rename_req = {
     'file_id': fields.String(required=True),
     'new_name': fields.String(required=True)
 }
+
+user_details_req = {
+    'ids': fields.List(fields.String, required=True)
+}

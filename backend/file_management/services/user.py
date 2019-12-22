@@ -16,7 +16,7 @@ from file_management.helpers import validator, get_max_age, verify_password
 
 __author__ = 'LongHB'
 
-from file_management.repositories.user import find_one_by_user_id
+from file_management.repositories.user import find_one_by_user_id, get_users_by_ids
 
 _logger = logging.getLogger(__name__)
 
@@ -140,3 +140,9 @@ def get_user_name_by_user_id(user_id):
     except Exception as e:
         _logger.error(e)
         raise OwnerNotFoundException()
+
+
+def get_details_by_ids(ids):
+    ids = [int(id) for id in ids]
+    users = get_users_by_ids(ids)
+    return [{'email': user.email, 'fullname': user.fullname} for user in users]

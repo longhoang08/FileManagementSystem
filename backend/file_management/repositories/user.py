@@ -73,3 +73,9 @@ def un_block_user(user):
     user.is_active = True
     m.db.session.commit()
     return user
+
+
+def get_users_by_ids(ids):
+    return m.User.query.filter(
+        m.User.id.in_(ids)
+    ).filter(m.User.is_active == True).with_entities(m.User.email, m.User.fullname)
