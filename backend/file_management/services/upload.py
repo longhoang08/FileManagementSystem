@@ -17,8 +17,15 @@ def create_file_info(path_upload, user_id, parent_id, file_name, file_size, file
 
     thumbnail_url = helpers.get_thumbnail_url(file_id, file_name, path_upload)
 
-    return insert.insert(file_id, file_name, file_size, parent_id,
+    insert.insert(file_id, file_name, file_size, parent_id,
                   user_id, mime_type, tags, thumbnail_url)
+
+    return {
+        'file_id' : file_id,
+        'file_name' : file_name,
+        'tags' : tags,
+        'file_size' : file_size
+    }
 
 def check_duplicate(file_name, parent_id):
     es = FileElasticRepo()
