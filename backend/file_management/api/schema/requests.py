@@ -72,3 +72,8 @@ trash_req = {
 star_req = {
     'file_id': fields.String(required=True)
 }
+
+rename_req = {
+    'file_id': fields.String(required=True),
+    'new_name': fields.String(required=True)
+}
