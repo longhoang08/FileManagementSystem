@@ -69,8 +69,6 @@ def get_file(file_id):
     else:
         return None
 
-
-<<<<<<< HEAD
 def remove_child(file_id, child_id):
     file = get_file(file_id)
     if file is None:
