@@ -138,13 +138,11 @@ def move_files(file_ids, new_parent):
     check_insert_privilege(parent_id=new_parent, user_id=user_id)
     parent_of_first_file = files.utils.get_file(file_ids[0])
     parent_of_first_file = parent_of_first_file['parent_id']
+    move_files = [files.utils.get_file(file_id) for file_id in file_ids]
+    for file in move_files:
+        if file.get('parent_id') != parent_of_first_file:
+            raise DiffParentException("Can't move files which have different parents")
     for file_id in file_ids:
-        parent_id = files.utils.get_file(file_ids[0])['parent_id']
-        if parent_id != parent_of_first_file:
-            """
-            All file must have same parent_id, else throws Exception
-            """
-            raise DiffParentException()
         move_one_file(file_id, new_parent)
 
 
