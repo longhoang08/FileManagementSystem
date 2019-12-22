@@ -83,7 +83,7 @@ def edit_privilege_required(fn):
     """
 
     @wraps(fn)
-    def wrapper(*args, file_id, **kwargs):
+    def wrapper(file_id, **kwargs):
         verify_jwt_in_request()
         email = get_jwt_identity()
         if email is None:
@@ -93,7 +93,7 @@ def edit_privilege_required(fn):
             raise UserNotFoundException()
         user_permission = get_role_of_user(user_id=user.id, file_id=file_id)
         if user_permission['is_owner'] or user_permission['editable']:
-            return fn(*args, file_id, **kwargs)
+            return fn(file_id, **kwargs)
         else:
             raise PermissionException('You are not allowed to edit this file!')
 
@@ -125,5 +125,14 @@ def owner_privilege_required(fn):
 
 def check_insert_privilege(user_id, parent_id):
     privileges = get_role_of_user(user_id=user_id, file_id=parent_id)
+    print("====================================")
+    print("====================================")
+    print("====================================")
+    print("====================================")
+    print(privileges)
+    print("====================================")
+    print("====================================")
+    print("====================================")
+    print("====================================")
     if not (privileges['is_owner'] and privileges['editable']):
         raise PermissionException('You are not allowed to insert file into this folder')
