@@ -68,7 +68,6 @@ def share(args):
         return update.update(file_id, share_mode=share_mode).get('result')  # public
 
 
-@owner_privilege_required
 def move2trash(file_ids=None):
     """
     Move files to trash
