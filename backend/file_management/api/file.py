@@ -81,8 +81,17 @@ class PermanentlyDelete(flask_restplus.Resource):
         return res
 
 
+_file_share_req = ns.model('file_share_request', requests.share_req)
 _star_req = ns.model('Add Star Request', requests.star_req)
 
+@ns.route('/share', methods=['POST'])
+class ShareFile(flask_restplus.Resource):
+    @ns.expect(_file_share_req, validate=True)
+    def post(self):
+        args = request.args or request.json
+        if not args:
+            args = {}
+        return services.file.share(args)
 
 @ns.route('/add_star', methods=['POST'])
 class AddStar(flask_restplus.Resource):

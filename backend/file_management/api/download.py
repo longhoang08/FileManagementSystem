@@ -42,5 +42,4 @@ class Thumbnail(flask_restplus.Resource):
     """
 
     def get(self, file_id):
-        return send_file(
-            '../' + services.file.search({"file_id": file_id, "user_id": 1})['result']['files'][0]["thumbnail_url"])
+        return send_file('../' + repositories.files.utils.get_file(file_id)["thumbnail_url"])
