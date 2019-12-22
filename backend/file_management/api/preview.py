@@ -13,10 +13,6 @@ from file_management import repositories
 
 __author__ = 'LongHB'
 
-from ..repositories.files.utils import get_role_of_user
-
-from ..repositories.pending_register import find_one_by_email
-
 _logger = logging.getLogger(__name__)
 
 ns = Namespace('preview', description='Get docs, zip, image preview')

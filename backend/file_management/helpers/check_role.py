@@ -66,7 +66,7 @@ def viewable_required(fn):
         permission = get_role_of_user(user_id, file_id)
         if not permission['viewable']:
             raise PermissionException('You are not allowed to view this file!')
-
+        print("OK")
     return wrapper
 
 
