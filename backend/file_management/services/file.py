@@ -6,7 +6,7 @@ from flask_jwt_extended import get_jwt_identity
 from file_management.helpers.check_role import user_required, owner_privilege_required, check_insert_privilege
 from file_management.extensions.custom_exception import UserNotFoundException, DiffParentException, \
     FileNotExistException, PermissionException
-from file_management.helpers.check_role import user_required, owner_privilege_required, get_email_in_jwt
+from file_management.helpers.check_role import user_required, owner_privilege_required, get_email_in_jwt, edit_privilege_required
 from file_management.repositories.files import FileElasticRepo
 from file_management.repositories.files import update
 from file_management.repositories import files
@@ -150,3 +150,8 @@ def move_file(file_id, new_parent):
     files.update.update(file['parent_id'], children_id=old_parent_new_children)  # Update old parent
     files.update.update(new_parent, children_id=new_parent_new_children)  # Update new parent
     files.update.update(file_id, parent_id=new_parent)  # Update itself
+
+
+@edit_privilege_required
+def rename_file(file_id, new_name):
+    files.update.update(file_id, file_title=new_name)
