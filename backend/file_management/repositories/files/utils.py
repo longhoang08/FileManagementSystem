@@ -5,7 +5,8 @@ from file_management.constant import pathconst
 def get_role_of_user(user_id, file_id):
     from file_management.repositories.files import es
     cur_id = file_id
-    user_id = str(user_id)
+    if user_id:
+        user_id = str(user_id)
     viewable = False
     editable = False
     is_owner = False
@@ -17,7 +18,7 @@ def get_role_of_user(user_id, file_id):
             viewable = True
             if cur_file['editable'] == True:
                 editable = True
-        if cur_file['share_mode'] == 1:
+        if cur_file['share_mode'] == 2:
             viewable = True
         if is_owner: break
         cur_id = cur_file['parent_id']
@@ -69,3 +70,50 @@ def get_file(file_id):
         return es.get_source(index=FILES_INDEX, id=file_id)
     else:
         return None
+
+
+def remove_child(file_id, child_id):
+    file = get_file(file_id)
+    if file is None:
+        return None
+    children_id = file['children_id']
+    if child_id in children_id:
+        children_id.remove(child_id)
+    return children_id
+
+
+def add_child(file_id, child_id):
+    file = get_file(file_id)
+    if file is None:
+        raise FileNotFoundError()
+    children_id = file['children_id']
+    if child_id not in children_id:
+        children_id.append(child_id)
+    return children_id
+
+
+def is_this_file_exists(file_id):
+    from file_management.repositories.files import es
+    return es.exists(index=FILES_INDEX, id=file_id)
+
+
+def get_parse_url(folder_id, user_id):
+    from file_management.repositories.files import es
+    pending_urls = []
+    parse_urls = []
+    cur_id = folder_id
+    if user_id:
+        user_id = str(user_id)
+
+    while es.exists(index=FILES_INDEX, id=cur_id):
+        cur_file = es.get_source(index=FILES_INDEX, id=cur_id)
+        pending_urls.append({'id': cur_id, 'title': cur_file.get('file_title')})
+        viewable = False
+        viewable |= cur_file['owner'] == user_id
+        viewable |= cur_file['share_mode'] == 1 and user_id in cur_file['children_id']
+        viewable |= cur_file['share_mode'] == 2
+        if viewable:
+            parse_urls += pending_urls
+            pending_urls.clear()
+        cur_id = cur_file['parent_id']
+    return parse_urls[::-1]

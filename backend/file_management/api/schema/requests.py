@@ -30,22 +30,27 @@ download_file_req = {
 }
 file_details_req = {
     'q': fields.String(required=False, description='Search text'),
-    'user_id': fields.String(required=False, description='Search text'),
-    'basic_info': fields.Boolean(required=False, description='Only get basic info of file'),
+    'file_id': fields.String(required=False, description='id of file to get details'),
+    'basic_info': fields.Boolean(required=False, description='Only get basic info of file', default=False),
     'only_photo': fields.Boolean(required=False, description='Only get photo'),
     'star': fields.Boolean(required=False, description='Only get star'),
     'trash': fields.Boolean(required=False, description='Only get file in trash'),
-    '_limit': fields.Integer(required=False, description='Limit each page'),
-    '_page': fields.Integer(required=False, description='Page-th'),
+    '_limit': fields.Integer(required=False, description='Limit each page', default=12),
+    '_page': fields.Integer(required=False, description='Page-th', defalt=1),
 }
+
+move_req = {
+    'file_ids': fields.List(fields.String, required=True, description='ID\'s File'),
+    'new_parent': fields.String(required=False, description='new parent id')
+}
+
 folder_details_req = {
-    'folder_id': fields.String(required=False, description='folder_id')
+    'folder_id': fields.String(required=True, description='folder_id')
 }
 
 folder_create_req = {
-    'parent_id': fields.String(required=False, description='parent_id'),
-    'file_title': fields.String(required=False, description='folder_name'),
-    'user_id': fields.String(required=False, description='user_id')
+    'parent_id': fields.String(required=True, description='parent_id'),
+    'file_title': fields.String(required=True, description='folder_name'),
 
 }
 switch_block_user_req = {
@@ -58,6 +63,7 @@ share_req = {
     'share_by_link': fields.Boolean(required=False, default=False),
     'private': fields.Boolean(required=False, default=False)
 }
+
 trash_req = {
     'file_ids': fields.List(fields.String, required=True)
 }
@@ -66,3 +72,7 @@ star_req = {
     'file_id': fields.String(required=True)
 }
 
+rename_req = {
+    'file_id': fields.String(required=True),
+    'new_name': fields.String(required=True)
+}

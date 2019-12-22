@@ -5,8 +5,8 @@ import datetime
 from file_management import repositories as repo
 from file_management import helpers
 from file_management.repositories.files import insert, utils
-from file_management.extensions.custom_exception import PermissionException
-
+from file_management.extensions.custom_exception import PermissionException, PathUploadNotFound
+from file_management.repositories.file import FileElasticRepo
 __author__ = 'Dang'
 _logger = logging.getLogger(__name__)
 
@@ -20,16 +20,26 @@ def create_file_info(path_upload, user_id, parent_id, file_name, file_size, file
     return insert.insert(file_id, file_name, file_size, parent_id,
                   user_id, mime_type, tags, thumbnail_url)
 
+def check_duplicate(file_name, parent_id):
+    es = FileElasticRepo()
+    list_child = es.get_children_of_folder(parent_id)['children_id']
+    list_name = [utils.get_file(fileid)["file_title"] for fileid in list_child]
+    if file_name in list_name:
+        return "copy of " + str(file_name)
+    else:
+        return str(file_name)
+    
+
 
 def write_file(fi, parent_id, user_id):
-
+    
     folders = utils.get_ancestors(parent_id)
     path_upload = '/'.join(folders)
     if not os.path.exists(path_upload):
         os.makedirs(path_upload)
 
     file_id = helpers.generate_file_id(user_id)
-    file_name = fi.filename
+    file_name = check_duplicate(fi.filename, parent_id)
 
     mime_type = ''
 
@@ -51,7 +61,7 @@ def write_file(fi, parent_id, user_id):
         if ('image' in mime_type):
             tags = helpers.generate_image_tag(path_saved)
     except Exception as e:
-        _logger.error(e)
+        return str(e)
         raise PathUploadNotFound()
     # get response
     return create_file_info(path_upload, user_id, parent_id, file_name, file_size,

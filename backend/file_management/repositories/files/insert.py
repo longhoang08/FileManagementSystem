@@ -12,7 +12,7 @@ def insert(file_id, file_title, file_size, parent_id, user_id, mime_type, tags, 
         "file_title": file_title,
         "size": file_size,
         "file_type": mime_type,
-        "owner": user_id,
+        "owner": str(user_id),
         "star": starred,
         "parent_id": parent_id,
         "thumbnail_url": thumbnail_url,
@@ -23,7 +23,8 @@ def insert(file_id, file_title, file_size, parent_id, user_id, mime_type, tags, 
         "created_at": created_at,
         "updated_at": updated_at,
         "file_tag": tags,
-        "description": ""
+        "description": "",
+        "trashed": False
     }
 
     from file_management.repositories.files import es

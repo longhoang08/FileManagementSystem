@@ -6,13 +6,15 @@ from elasticsearch_dsl import query, Search
 
 from config import FILES_INDEX
 from file_management import BadRequestException
+from file_management.extensions.custom_exception import NotFolderException, FolderNotExistException
 from file_management.models.file import mappings, settings
 from file_management.repositories.es_base import EsRepositoryInterface
 
 __author__ = 'LongHB'
 _logger = logging.getLogger(__name__)
 
-FOLDER_DETAILS = ["star", "owner", "editable", "created_at", "description", "children_id"]
+FOLDER_DETAILS = ["file_type", "star", "owner", "editable", "created_at", "description", "children_id"]
+BASIC_INFOS = ['owner', 'file_title', 'star', 'updated_at', 'file_type', 'file_id', "thumbnail_url", "size"]
 
 
 class FileElasticRepo(EsRepositoryInterface):
@@ -43,6 +45,8 @@ class FileElasticRepo(EsRepositoryInterface):
             else:
                 conditions.append(query.Term(file_id=file_id))
         search_text = args.get('q')
+        if file_id and search_text:
+            raise BadRequestException("Not support both q and file_id param")
         if search_text:
             conditions.append(query.DisMax(queries=[
                 query.MatchPhrasePrefix(file_title={
@@ -65,30 +69,33 @@ class FileElasticRepo(EsRepositoryInterface):
         return conditions
 
     def build_filter_condions(self, args):
-        if not args.get('user_id'):
-            raise BadRequestException("Required user id in arguments")
+
         must_conditions = []
-        must_conditions.append(query.Term(owner=args.get('user_id')))
         must_conditions.append(query.Bool(
             should=[
                 query.Term(trashed=False),
                 query.Bool(must_not=query.Exists(field="trashed"))
             ] if not args.get('trash') else [query.Term(trashed=True)]
         ))
-        if args.get('star'):
-            must_conditions.append(query.Term(star=True))
-        if args.get('only_photo'):
-            must_conditions.append(query.Prefix(file_type={'value': 'image'}))
-
+        if not args.get('user_id'):
+            must_conditions.append(query.Term(share_mode={'value': 2}))
+        else:
+            must_conditions.append(query.Term(owner=args.get('user_id')))
+            if args.get('star'):
+                must_conditions.append(query.Term(star=True))
+            if args.get('only_photo'):
+                must_conditions.append(query.Prefix(file_type={'value': 'image'}))
         return query.Bool(must=must_conditions)
 
     def get_children_of_folder(self, folder_id):
         try:
             response = self.es.get(self._index, folder_id, _source=FOLDER_DETAILS)['_source']
+            if response.get('file_type') != 'folder':
+                raise NotFolderException()
             return response
         except Exception as e:
             _logger.error(e)
-            raise BadRequestException('Folder not exist')
+            raise FolderNotExistException()
 
     def build_file_query(self, args):
         """
@@ -117,7 +124,7 @@ class FileElasticRepo(EsRepositoryInterface):
         if (args.get('get_children_id')):
             sources += ['children_id']
         if (args.get('basic_info')):
-            sources += ['file_title', 'star', 'updated_at', 'file_type', 'file_id', "thumbnail_url", "size"]
+            sources += BASIC_INFOS
         if sources:
             file_es = file_es.source(sources)
         return file_es

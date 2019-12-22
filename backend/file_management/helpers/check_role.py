@@ -4,6 +4,16 @@ from flask_jwt_extended import verify_jwt_in_request, get_jwt_identity
 from file_management.extensions.custom_exception import PermissionException, UserNotFoundException
 from file_management import models
 from file_management.repositories.files.utils import get_ancestors, get_role_of_user
+from file_management.repositories.user import find_one_by_email
+
+
+def get_email_in_jwt():
+    try:
+        verify_jwt_in_request()
+        email = get_jwt_identity()
+        return email
+    except Exception as e:
+        return None
 
 
 def user_required(fn):
@@ -45,6 +55,17 @@ def admin_required(fn):
     return wrapper
 
 
+def viewable_check(file_id):
+    email = get_email_in_jwt()
+    user_id = None
+    if email:
+        user_id = find_one_by_email(email).id
+        user_id = str(user_id) if user_id else user_id
+    permission = get_role_of_user(user_id, file_id)
+    if not permission['viewable']:
+        raise PermissionException('You are not allowed to view this file!')
+
+
 def view_privilege_required(fn):
     """
     Check if a user is allowed to view this file
@@ -74,7 +95,7 @@ def edit_privilege_required(fn):
     """
 
     @wraps(fn)
-    def wrapper(*args, file_id, **kwargs):
+    def wrapper(file_id, **kwargs):
         verify_jwt_in_request()
         email = get_jwt_identity()
         if email is None:
@@ -84,7 +105,7 @@ def edit_privilege_required(fn):
             raise UserNotFoundException()
         user_permission = get_role_of_user(user_id=user.id, file_id=file_id)
         if user_permission['is_owner'] or user_permission['editable']:
-            return fn(*args, file_id, **kwargs)
+            return fn(file_id, **kwargs)
         else:
             raise PermissionException('You are not allowed to edit this file!')
 
@@ -97,7 +118,7 @@ def owner_privilege_required(fn):
     """
 
     @wraps(fn)
-    def wrapper(*args, file_id, **kwargs):
+    def wrapper(file_id, **kwargs):
         verify_jwt_in_request()
         email = get_jwt_identity()
         if email is None:
@@ -107,7 +128,7 @@ def owner_privilege_required(fn):
             raise UserNotFoundException()
         user_permission = get_role_of_user(user_id=user.id, file_id=file_id)
         if user_permission['is_owner']:
-            return fn(*args, file_id, **kwargs)
+            return fn(file_id, **kwargs)
         else:
             raise PermissionException('You must be owner to authorize!')
 
