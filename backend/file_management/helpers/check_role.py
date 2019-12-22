@@ -125,14 +125,5 @@ def owner_privilege_required(fn):
 
 def check_insert_privilege(user_id, parent_id):
     privileges = get_role_of_user(user_id=user_id, file_id=parent_id)
-    print("====================================")
-    print("====================================")
-    print("====================================")
-    print("====================================")
-    print(privileges)
-    print("====================================")
-    print("====================================")
-    print("====================================")
-    print("====================================")
     if not (privileges['is_owner'] and privileges['editable']):
         raise PermissionException('You are not allowed to insert file into this folder')
