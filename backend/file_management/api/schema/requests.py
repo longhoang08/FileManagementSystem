@@ -40,7 +40,7 @@ file_details_req = {
 }
 
 move_req = {
-    'file_id': fields.String(required=False, description='file_id'),
+    'file_ids': fields.List(fields.String, required=True, description='ID\'s File'),
     'new_parent': fields.String(required=False, description='new parent id')
 }
 
@@ -70,4 +70,9 @@ trash_req = {
 
 star_req = {
     'file_id': fields.String(required=True)
+}
+
+rename_req = {
+    'file_id': fields.String(required=True),
+    'new_name': fields.String(required=True)
 }

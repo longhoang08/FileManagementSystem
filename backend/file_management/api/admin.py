@@ -4,9 +4,8 @@ import logging
 from flask_restplus import Resource, reqparse, fields
 from flask import request
 
-from file_management import services
 from file_management.extensions import Namespace
-from file_management.services.admin import get_all_users, search_users, block_user, \
+from file_management.services.admin import search_users, block_user, \
     un_block_user
 from file_management.helpers.check_role import admin_required
 from . import requests, responses
@@ -29,7 +28,6 @@ _search_users_parser.add_argument('ipp', type=int)
 
 @ns.route('/search_users', methods=['GET'])
 class SearchUsers(Resource):
-    @admin_required
     @ns.expect(_search_users_parser)
     @ns.marshal_with(_users_list_res)
     def get(self):

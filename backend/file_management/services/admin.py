@@ -10,12 +10,6 @@ __author__ = 'Dat'
 _logger = logging.getLogger(__name__)
 
 
-def get_all_users(page=1, ipp=10):
-    users = repositories.admin.get_all_users(page, ipp)
-    users_dict = [user.to_dict() for user in users]
-    return users_dict
-
-
 def search_users(username='', page=1, ipp=10):
     users = repositories.admin.search_users(username, page, ipp)
     users_dict = [user.to_dict() for user in users]
