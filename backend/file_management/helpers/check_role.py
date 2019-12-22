@@ -64,7 +64,7 @@ def viewable_check(file_id, error_message='You are not allowed to view this file
     permission = get_role_of_user(user_id, file_id)
     if not permission['viewable']:
         raise PermissionException(error_message)
-    return permission
+    return permission, {'user_id': user_id, 'email': email}
 
 
 def view_privilege_required(fn):

@@ -22,8 +22,8 @@ _logger = logging.getLogger(__name__)
 
 def folder_details(args):
     folder_id = args.get('folder_id')
-    permission = viewable_check(folder_id, error_message="You are not allowed to view this folder")
-
+    permission, user_info = viewable_check(folder_id, error_message="You are not allowed to view this folder")
+    user_id = user_info.get('user_id')
     es = FileElasticRepo()
     folder_details = es.get_children_of_folder(folder_id)
     children_id = folder_details['children_id']
@@ -42,7 +42,7 @@ def folder_details(args):
     return {
         **folder_details,
         **permission,
-        'parse_urls': get_parse_url(folder_id, args.get('user_id')),
+        'parse_urls': get_parse_url(folder_id, user_id),
         "children_details": children_details
     }
 
