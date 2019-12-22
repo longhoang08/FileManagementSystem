@@ -32,7 +32,6 @@ class FileElasticRepo(EsRepositoryInterface):
         :return:
         """
         file_es = self.build_file_query(args)
-        # print(json.dumps(file_es.to_dict()))
         responses = file_es.using(self.es).index(self._index).execute()
         return responses
 
@@ -69,7 +68,6 @@ class FileElasticRepo(EsRepositoryInterface):
         return conditions
 
     def build_filter_condions(self, args):
-
         must_conditions = []
         must_conditions.append(query.Bool(
             should=[
@@ -77,14 +75,15 @@ class FileElasticRepo(EsRepositoryInterface):
                 query.Bool(must_not=query.Exists(field="trashed"))
             ] if not args.get('trash') else [query.Term(trashed=True)]
         ))
-        if not args.get('user_id'):
-            must_conditions.append(query.Term(share_mode={'value': 2}))
-        else:
-            must_conditions.append(query.Term(owner=args.get('user_id')))
-            if args.get('star'):
-                must_conditions.append(query.Term(star=True))
-            if args.get('only_photo'):
-                must_conditions.append(query.Prefix(file_type={'value': 'image'}))
+        if not args.get('is_folder_api'):
+            if not args.get('user_id'):
+                must_conditions.append(query.Term(share_mode={'value': 2}))
+            else:
+                must_conditions.append(query.Term(owner=args.get('user_id')))
+        if args.get('star'):
+            must_conditions.append(query.Term(star=True))
+        if args.get('only_photo'):
+            must_conditions.append(query.Prefix(file_type={'value': 'image'}))
         return query.Bool(must=must_conditions)
 
     def get_children_of_folder(self, folder_id):
@@ -108,7 +107,7 @@ class FileElasticRepo(EsRepositoryInterface):
             filter=[self.build_filter_condions(args)]
         )
         file_es = self.build_file_es(args, conditions)
-        print(json.dumps(file_es.to_dict()))
+        _logger.info("Elasticsearch query: " + str(json.dumps(file_es.to_dict())))
         return file_es
 
     def build_file_es(self, args, search_condition):
@@ -130,8 +129,8 @@ class FileElasticRepo(EsRepositoryInterface):
         return file_es
 
     def add_page_limit_to_file_es(self, args, file_es):
-        _page = args.get('_page') if args.get('_page') else 1
-        _limit = args.get('_limit') if args.get('_limit') else 12
+        _page = args.get('_page')
+        _limit = args.get('_limit')
         file_es = file_es[(_page - 1) * _limit: _page * _limit]
         return file_es
 

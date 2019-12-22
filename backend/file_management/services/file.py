@@ -3,19 +3,19 @@ import logging
 
 from flask_jwt_extended import get_jwt_identity
 
-from file_management.helpers.check_role import user_required, owner_privilege_required, check_insert_privilege
+from file_management.helpers.check_role import check_insert_privilege
 from file_management.extensions.custom_exception import UserNotFoundException, DiffParentException, \
     FileNotExistException, PermissionException
 from file_management.helpers.check_role import user_required, owner_privilege_required, get_email_in_jwt, \
     edit_privilege_required
-from file_management.helpers.transformer import add_user_name_to_files
+from file_management.helpers.transformer import add_user_name_to_files, extract_file_data_from_response
 from file_management.repositories.files import FileElasticRepo
 from file_management.repositories.files import update
 from file_management.repositories import files
 
 __author__ = 'LongHB'
 
-from file_management.repositories.files.utils import is_this_file_exists, get_file
+from file_management.repositories.files.utils import get_file
 
 from file_management.repositories.user import find_one_by_email
 
@@ -33,15 +33,6 @@ def search(args):
     response = extract_file_data_from_response(response)
     add_user_name_to_files(response['result']['files'])
     return response
-
-
-def extract_file_data_from_response(responses):
-    if not responses:
-        return {'result': {'files': []}}
-    responses = responses.to_dict()
-    hits = responses['hits']['hits']
-    files = [item['_source'] for item in hits]
-    return {'result': {'files': files}}
 
 
 @user_required
@@ -62,14 +53,14 @@ def share(args):
 
     if args.get('private'):
         share_mode = 0
-        return update.update(file_id, share_mode=share_mode).get('result')  # private
-    elif args.get('emails'):
+        return update.update(file_id, share_mode=share_mode, users_shared=[]).get('result')  # private
+    elif args.get('share_by_link'):
         share_mode = 1
         users_shared = [str(find_one_by_email(mail).id) for mail in args['emails']]
         return update.update(file_id, share_mode=share_mode, users_shared=users_shared).get('result')  # custom
-    elif args.get('share_by_link'):
+    elif not args.get('share_by_link') and not args.get('private'):
         share_mode = 2
-        return update.update(file_id, share_mode=share_mode).get('result')  # public
+        return update.update(file_id, share_mode=share_mode, users_shared=[]).get('result')  # public
 
 
 def move2trash(file_ids=None):
@@ -147,13 +138,11 @@ def move_files(file_ids, new_parent):
     check_insert_privilege(parent_id=new_parent, user_id=user_id)
     parent_of_first_file = files.utils.get_file(file_ids[0])
     parent_of_first_file = parent_of_first_file['parent_id']
+    move_files = [files.utils.get_file(file_id) for file_id in file_ids]
+    for file in move_files:
+        if file.get('parent_id') != parent_of_first_file:
+            raise DiffParentException("Can't move files which have different parents")
     for file_id in file_ids:
-        parent_id = files.utils.get_file(file_ids[0])['parent_id']
-        if parent_id != parent_of_first_file:
-            """
-            All file must have same parent_id, else throws Exception
-            """
-            raise DiffParentException()
         move_one_file(file_id, new_parent)
 
 

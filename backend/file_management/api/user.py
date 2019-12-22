@@ -10,6 +10,9 @@ from file_management.extensions.custom_exception import InvalidLoginTokenExcepti
 from . import responses, requests
 
 __author__ = 'longhb'
+
+from ..services.user import get_details_by_ids
+
 _logger = logging.getLogger(__name__)
 
 ns = Namespace('users', description='User operations')
@@ -53,3 +56,14 @@ class Logout(flask_restplus.Resource):
         "remove jwt token from httponly cookies"
         resp = services.user.logout()
         return resp
+
+
+_user_details_req = ns.model('user_details_req', requests.user_details_req)
+
+
+@ns.route('/info', methods=['POST'])
+class GetUserInfo(flask_restplus.Resource):
+    @ns.expect(_user_details_req, validate=True)
+    def post(self):
+        args = request.args or request.json
+        return get_details_by_ids(args.get('ids'))

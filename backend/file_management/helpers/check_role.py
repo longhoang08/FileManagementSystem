@@ -55,7 +55,7 @@ def admin_required(fn):
     return wrapper
 
 
-def viewable_check(file_id):
+def viewable_check(file_id, error_message='You are not allowed to view this file!'):
     email = get_email_in_jwt()
     user_id = None
     if email:
@@ -63,7 +63,8 @@ def viewable_check(file_id):
         user_id = str(user_id) if user_id else user_id
     permission = get_role_of_user(user_id, file_id)
     if not permission['viewable']:
-        raise PermissionException('You are not allowed to view this file!')
+        raise PermissionException(error_message)
+    return permission, {'user_id': user_id, 'email': email}
 
 
 def view_privilege_required(fn):
