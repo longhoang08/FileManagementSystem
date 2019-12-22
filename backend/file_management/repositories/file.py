@@ -13,6 +13,7 @@ __author__ = 'LongHB'
 _logger = logging.getLogger(__name__)
 
 FOLDER_DETAILS = ["star", "owner", "editable", "created_at", "description", "children_id"]
+BASIC_INFOS = ['owner', 'file_title', 'star', 'updated_at', 'file_type', 'file_id', "thumbnail_url", "size"]
 
 
 class FileElasticRepo(EsRepositoryInterface):
@@ -120,7 +121,7 @@ class FileElasticRepo(EsRepositoryInterface):
         if (args.get('get_children_id')):
             sources += ['children_id']
         if (args.get('basic_info')):
-            sources += ['file_title', 'star', 'updated_at', 'file_type', 'file_id', "thumbnail_url", "size"]
+            sources += BASIC_INFOS
         if sources:
             file_es = file_es.source(sources)
         return file_es

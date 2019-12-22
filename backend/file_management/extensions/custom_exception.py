@@ -130,4 +130,9 @@ class FileNotExistException(HTTPException):
 
 class ParentFolderNotExistException(HTTPException):
     def __init__(self, message="Parent folder not exists", errors=None):
-        super().__init__(code=404, message=message, errors=errors, custom_code='file_not_exist')
+        super().__init__(code=404, message=message, errors=errors, custom_code='parent_not_exist')
+
+
+class OwnerNotFoundException(HTTPException):
+    def __init__(self, message="Cannot determine file owner", errors=None):
+        super().__init__(code=404, message=message, errors=errors, custom_code='owner_not_exist')

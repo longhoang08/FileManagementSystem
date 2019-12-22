@@ -5,7 +5,8 @@ from file_management.constant import pathconst
 def get_role_of_user(user_id, file_id):
     from file_management.repositories.files import es
     cur_id = file_id
-    user_id = str(user_id)
+    if user_id:
+        user_id = str(user_id)
     viewable = False
     editable = False
     is_owner = False
@@ -69,6 +70,7 @@ def get_file(file_id):
         return es.get_source(index=FILES_INDEX, id=file_id)
     else:
         return None
+
 
 def remove_child(file_id, child_id):
     file = get_file(file_id)

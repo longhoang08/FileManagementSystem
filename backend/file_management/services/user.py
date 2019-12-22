@@ -9,11 +9,15 @@ from file_management import models as m, services
 from file_management import repositories
 from file_management.constant import message
 from file_management.extensions.custom_exception import MustConfirmEmailException, UserNotFoundException, \
-    UserExistsException, NotInPendingException, NeedLoggedInException, PermissionException, BlockedException
+    UserExistsException, NotInPendingException, NeedLoggedInException, PermissionException, BlockedException, \
+    OwnerNotFoundException
 from file_management.extensions.exceptions import BadRequestException
 from file_management.helpers import validator, get_max_age, verify_password
 
 __author__ = 'LongHB'
+
+from file_management.repositories.user import find_one_by_user_id
+
 _logger = logging.getLogger(__name__)
 
 
@@ -128,3 +132,11 @@ def check_permission(user_email):
     if (user_email != jwt_email):
         raise PermissionException()
 
+
+def get_user_name_by_user_id(user_id):
+    try:
+        user_id = int(user_id)
+        return find_one_by_user_id(user_id).fullname
+    except Exception as e:
+        _logger.error(e)
+        raise OwnerNotFoundException()

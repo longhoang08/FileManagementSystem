@@ -5,7 +5,7 @@ from flask_jwt_extended import get_jwt_identity
 
 from file_management import helpers
 from file_management.extensions.custom_exception import UserNotFoundException, PermissionException, \
-    ParentFolderNotExistException
+    ParentFolderNotExistException, OwnerNotFoundException
 from file_management.helpers.check_role import user_required, get_email_in_jwt
 from file_management.repositories.files import FileElasticRepo, insert
 
@@ -15,6 +15,7 @@ from file_management.repositories.files.utils import get_role_of_user, is_this_f
 
 from file_management.repositories.user import find_one_by_email
 from file_management.services.file import extract_file_data_from_response
+from file_management.services.user import get_user_name_by_user_id
 
 _logger = logging.getLogger(__name__)
 
@@ -54,10 +55,27 @@ def folder_details(args):
             'file_id': children_id, 'basic_info': True, 'user_id': '1', **args
         })
     del folder_details["children_id"]
+    children_details = children_details['result']['files']
+    add_user_name_to_files(children_details)
     return {
         **folder_details,
         **permision,
-        "children_details": children_details['result']['files']
+        "children_details": children_details
+    }
+
+
+def add_user_name_to_files(files):
+    for file in files:
+        add_user_name_to_file(file)
+
+
+def add_user_name_to_file(file):
+    owner_id = file.get('owner')
+    if not owner_id:
+        raise OwnerNotFoundException()
+    file['owner'] = {
+        'id': owner_id,
+        'fullname': get_user_name_by_user_id(owner_id)
     }
 
 
