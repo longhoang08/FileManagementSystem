@@ -58,7 +58,7 @@ class Logout(flask_restplus.Resource):
         return resp
 
 
-_user_details_req = ns.model('login_req', requests.user_details_req)
+_user_details_req = ns.model('user_details_req', requests.user_details_req)
 
 
 @ns.route('/info', methods=['POST'])
