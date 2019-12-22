@@ -8,6 +8,7 @@ from file_management.extensions.custom_exception import UserNotFoundException, D
     FileNotExistException, PermissionException
 from file_management.helpers.check_role import user_required, owner_privilege_required, get_email_in_jwt, \
     edit_privilege_required
+from file_management.helpers.transformer import add_user_name_to_files
 from file_management.repositories.files import FileElasticRepo
 from file_management.repositories.files import update
 from file_management.repositories import files
@@ -29,7 +30,9 @@ def search(args):
             args['user_id'] = str(args['user_id'])
     file_es = FileElasticRepo()
     response = file_es.search(args)
-    return extract_file_data_from_response(response)
+    response = extract_file_data_from_response(response)
+    add_user_name_to_files(response['result']['files'])
+    return response
 
 
 def extract_file_data_from_response(responses):
