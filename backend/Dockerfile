@@ -16,7 +16,8 @@ RUN apt-get update && apt-get install -y \
     ufraw-batch \
     ffmpeg \
     imagemagick \
-    scribus
+    scribus \
+    libreoffice
 
 ADD requirements.txt /code/
 
