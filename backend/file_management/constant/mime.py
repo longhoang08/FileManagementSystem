@@ -1,5 +1,5 @@
-docs=['sheet', 'presentation','powerpoint', 'document', 'pdf'] 
+docs=['sheet', 'presentation','powerpoint', 'document', 'pdf', 'doc', 'office', 'msword', 'excel', 'docx']
 image =['image']
-zip = ['zip']
+zip = ['zip','compress']
 audio = ['audio','mp3']
 video = ['video','mp4']
