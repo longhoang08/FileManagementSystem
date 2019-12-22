@@ -4,7 +4,7 @@ from flask_jwt_extended import verify_jwt_in_request, get_jwt_identity
 from file_management.extensions.custom_exception import PermissionException, UserNotFoundException
 from file_management import models
 from file_management.repositories.files.utils import get_ancestors, get_role_of_user
-from file_management.repositories.pending_register import find_one_by_email
+from file_management.repositories.user import find_one_by_email
 
 
 def get_email_in_jwt():
