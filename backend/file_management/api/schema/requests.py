@@ -36,7 +36,7 @@ file_details_req = {
     'star': fields.Boolean(required=False, description='Only get star'),
     'trash': fields.Boolean(required=False, description='Only get file in trash'),
     '_limit': fields.Integer(required=False, description='Limit each page', default=12),
-    '_page': fields.Integer(required=False, description='Page-th', defalt=1),
+    '_page': fields.Integer(required=False, description='Page-th', default=1),
 }
 
 move_req = {
@@ -45,7 +45,9 @@ move_req = {
 }
 
 folder_details_req = {
-    'folder_id': fields.String(required=True, description='folder_id')
+    'folder_id': fields.String(required=True, description='folder_id'),
+    '_limit': fields.Integer(required=False, description='Limit each page', default=12),
+    '_page': fields.Integer(required=False, description='Page-th', default=1)
 }
 
 folder_create_req = {
