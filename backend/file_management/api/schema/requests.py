@@ -35,6 +35,7 @@ file_details_req = {
     'only_photo': fields.Boolean(required=False, description='Only get photo'),
     'star': fields.Boolean(required=False, description='Only get star'),
     'trash': fields.Boolean(required=False, description='Only get file in trash'),
+    'share': fields.Boolean(required=False, description='Only get shared file with me'),
     '_limit': fields.Integer(required=False, description='Limit each page', default=12),
     '_page': fields.Integer(required=False, description='Page-th', default=1),
 }
