@@ -1,4 +1,4 @@
-DEFAULT_AVATAR = 'http://bit.ly/defaultAvatar'
+DEFAULT_AVATAR = 'https://i.imgur.com/I0e5V02.png'
 DEFAULT_THUMBNAIL = None
 ZIP_THUMBNAIL = None
 DOCX_THUMBNAIL = None
