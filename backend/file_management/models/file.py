@@ -90,7 +90,13 @@ mappings = {
             }
         },
         "file_tag": {
-            "type": "keyword"
+            "type": "keyword",
+            "fields": {
+                'text': {
+                    "type": "text",
+                    "analyzer": "no_tone_analyzer"
+                }
+            }
         },
         "created_at": {
             "type": "date",
@@ -98,7 +104,7 @@ mappings = {
         },
         "updated_at": {
             "type": "date",
-            "format":"date_optional_time||dd/MM/yyyy hh:mm:ss a"
+            "format": "date_optional_time||dd/MM/yyyy hh:mm:ss a"
         }
     }
 }

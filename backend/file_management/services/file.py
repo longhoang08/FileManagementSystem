@@ -63,10 +63,14 @@ def share(args):
         return update.update(file_id, share_mode=share_mode, users_shared=[]).get('result')  # public
 
 
+@user_required
 def move2trash(file_ids=None):
     """
     Move files to trash
     """
+    email = get_email_in_jwt()
+    user_id = str(find_one_by_email(email).id)
+
     if not isinstance(file_ids, list):
         return "Only accept `list` datatype"
     if len(file_ids) == 0:
@@ -74,14 +78,20 @@ def move2trash(file_ids=None):
 
     parent_of_first_file = files.utils.get_file(file_ids[0])
     parent_of_first_file = parent_of_first_file['parent_id']
+
+    deleting_file = [files.utils.get_file(file_id) for file_id in file_ids]
+
+    for file in deleting_file:
+        if file.get('parent_id') != parent_of_first_file:
+            raise DiffParentException("Can't move files which have different parents")
+        if file.get('owner') != user_id:
+            raise PermissionException("You can't delete file of another user!")
+        if file.get("file_id") == user_id:
+            raise PermissionException("You can't delete your home folder")
+
     for file_id in file_ids:
-        parent_id = files.utils.get_file(file_ids[0])['parent_id']
-        if parent_id != parent_of_first_file:
-            """
-            All file must have same parent_id, else throws Exception
-            """
-            raise DiffParentException()
         move_one_file_to_trash(file_id)
+
     return True
 
 
