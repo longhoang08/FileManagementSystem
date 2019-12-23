@@ -72,7 +72,7 @@ def share(args):
             from file_management.services.notification import create_notification
             create_notification(
                 owner=int(args.get('user_id')),
-                viewd=False,
+                viewed=False,
                 user_id=user_id,
                 file_id=file.get('file_id')
             )
