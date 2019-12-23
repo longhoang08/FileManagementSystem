@@ -47,5 +47,7 @@ class User(db.Model, TimestampMixin):
             'fullname': self.fullname,
             'avatar_url': self.avatar_url,
             'is_admin': self.is_admin,
-            'is_actice': self.is_active
+            'is_active': self.is_active,
+            'created_at': datetime.datetime.timestamp(self.created_at),
+            'updated_at': datetime.datetime.timestamp(self.updated_at)
         }

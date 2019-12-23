@@ -82,3 +82,7 @@ rename_req = {
 user_details_req = {
     'ids': fields.List(fields.String, required=True)
 }
+
+notification_viewed_req = {
+    'ids': fields.List(fields.Integer, required=True)
+}

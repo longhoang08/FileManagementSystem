@@ -48,6 +48,7 @@ def share(args):
     file = get_file(file_id)
     if not file:
         raise FileNotExistException()
+
     if (file['owner'] != args['user_id']):
         raise PermissionException("You are not the owner of this file/folder")
 
@@ -56,7 +57,21 @@ def share(args):
         return update.update(file_id, share_mode=share_mode, users_shared=[]).get('result')  # private
     elif args.get('emails'):
         share_mode = 1
-        users_shared = [str(find_one_by_email(mail).id) for mail in args['emails']]
+        users_shared = []
+        for email in args['emails']:
+            user_shared = find_one_by_email(email)
+            if not user_shared:
+                raise UserNotFoundException("User with email " + email + " not exist!!!")
+            users_shared.append(user_shared.id)
+        for user_id in users_shared:
+            from file_management.services.notification import create_notification
+            create_notification(
+                owner=int(args.get('user_id')),
+                viewd=False,
+                user_id=user_id,
+                file_id=file.get('file_id')
+            )
+        users_shared = [str(id) for id in users_shared]
         return update.update(file_id, share_mode=share_mode, users_shared=users_shared).get('result')  # custom
     elif args.get('share_by_link'):
         share_mode = 2
