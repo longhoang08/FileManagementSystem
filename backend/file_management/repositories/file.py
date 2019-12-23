@@ -78,6 +78,11 @@ class FileElasticRepo(EsRepositoryInterface):
         if not args.get('is_folder_api'):
             if not args.get('user_id'):
                 must_conditions.append(query.Term(share_mode={'value': 2}))
+            elif args.get('share'):
+                must_conditions.append(query.Bool(must=[
+                    query.Term(share_mode={'value': 1}),
+                    query.Term(users_shared={'value': args.get('user_id')})
+                ]))
             else:
                 must_conditions.append(query.Term(owner=args.get('user_id')))
         if args.get('star'):
@@ -108,6 +113,7 @@ class FileElasticRepo(EsRepositoryInterface):
         )
         file_es = self.build_file_es(args, conditions)
         _logger.info("Elasticsearch query: " + str(json.dumps(file_es.to_dict())))
+        # print(str(json.dumps(file_es.to_dict())))
         return file_es
 
     def build_file_es(self, args, search_condition):

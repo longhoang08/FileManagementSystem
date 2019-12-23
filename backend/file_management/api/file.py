@@ -11,6 +11,7 @@ from file_management.extensions import Namespace
 __author__ = 'jian'
 
 from file_management.helpers.transformer import format_details_args
+from file_management.services.file import delete_all_file_in_trash
 
 _logger = logging.getLogger(__name__)
 
@@ -178,3 +179,13 @@ class RenameFile(flask_restplus.Resource):
             "status": True
         }
 
+@ns.route("/clear-trash", methods=["POST"])
+class ClearTrash(flask_restplus.Resource):
+    def post(self):
+        """
+        Rename file
+        """
+        delete_all_file_in_trash()
+        return {
+            "status": "OK"
+        }
