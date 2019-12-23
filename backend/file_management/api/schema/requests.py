@@ -35,6 +35,7 @@ file_details_req = {
     'only_photo': fields.Boolean(required=False, description='Only get photo'),
     'star': fields.Boolean(required=False, description='Only get star'),
     'trash': fields.Boolean(required=False, description='Only get file in trash'),
+    'share': fields.Boolean(required=False, description='Only get shared file with me'),
     '_limit': fields.Integer(required=False, description='Limit each page', default=12),
     '_page': fields.Integer(required=False, description='Page-th', default=1),
 }
@@ -81,4 +82,13 @@ rename_req = {
 
 user_details_req = {
     'ids': fields.List(fields.String, required=True)
+}
+
+notification_viewed_req = {
+    'ids': fields.List(fields.Integer, required=True)
+}
+
+copy_req = {
+    'file_ids': fields.List(fields.String, required=True, description='ID\'s File'),
+    'new_parent': fields.String(required=False, description='new parent id')
 }

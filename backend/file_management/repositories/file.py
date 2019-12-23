@@ -78,13 +78,30 @@ class FileElasticRepo(EsRepositoryInterface):
         if not args.get('is_folder_api'):
             if not args.get('user_id'):
                 must_conditions.append(query.Term(share_mode={'value': 2}))
+            elif args.get('share'):
+                must_conditions.append(self.shared_by_email_permission_condition(args))
+            elif args.get('file_id'):
+                must_conditions.append(query.Bool(should=[
+                    query.Term(owner=args.get('user_id')),
+                    self.shared_by_email_permission_condition(args),
+                    query.Term(share_mode={'value': 2}),
+                ],
+                    minimum_should_match=1
+                ))
             else:
                 must_conditions.append(query.Term(owner=args.get('user_id')))
+
         if args.get('star'):
             must_conditions.append(query.Term(star=True))
         if args.get('only_photo'):
             must_conditions.append(query.Prefix(file_type={'value': 'image'}))
         return query.Bool(must=must_conditions)
+
+    def shared_by_email_permission_condition(self, args):
+        return query.Bool(must=[
+            query.Term(share_mode={'value': 1}),
+            query.Term(users_shared={'value': args.get('user_id')})
+        ])
 
     def get_children_of_folder(self, folder_id):
         try:
@@ -108,6 +125,7 @@ class FileElasticRepo(EsRepositoryInterface):
         )
         file_es = self.build_file_es(args, conditions)
         _logger.info("Elasticsearch query: " + str(json.dumps(file_es.to_dict())))
+        # print(str(json.dumps(file_es.to_dict())))
         return file_es
 
     def build_file_es(self, args, search_condition):
@@ -129,8 +147,8 @@ class FileElasticRepo(EsRepositoryInterface):
         return file_es
 
     def add_page_limit_to_file_es(self, args, file_es):
-        _page = args.get('_page')
-        _limit = args.get('_limit')
+        _page = args.get('_page') if args.get('_page') else 1
+        _limit = args.get('_limit') if args.get('_limit') else 12
         file_es = file_es[(_page - 1) * _limit: _page * _limit]
         return file_es
 
@@ -181,5 +199,18 @@ class FileElasticRepo(EsRepositoryInterface):
             .source(['owner', 'share_mode', 'editable'])
         file_es = file_es[0:1]
         print(json.dumps(file_es.to_dict()))
+        responses = file_es.using(self.es).index(self._index).execute()
+        return responses
+
+    def query_to_check_duplicate_when_upload_or_create(self, folder_id, name):
+        conditions = query.Bool(
+            filter=[
+                query.Term(parent_id={'value': folder_id}),
+                query.Term(file_title__raw={'value': name})
+            ]
+        )
+        file_es = Search() \
+            .query(conditions)
+        file_es = file_es[0:1]
         responses = file_es.using(self.es).index(self._index).execute()
         return responses

@@ -12,3 +12,4 @@ from . import log
 from . import notification
 from . import admin
 from . import files
+from . import notification

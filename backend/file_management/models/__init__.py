@@ -46,3 +46,4 @@ from .user import User
 from .pending_register import Pending_register
 from .password import Password
 from .log import Log
+from .notification import Notification

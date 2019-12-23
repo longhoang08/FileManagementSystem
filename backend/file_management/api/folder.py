@@ -27,6 +27,7 @@ class GetFolders(flask_restplus.Resource):
         return services.folder.folder_details(args)
 
 
+
 @ns.route('/create', methods=['POST'])
 class CreateFolder(flask_restplus.Resource):
     @ns.expect(_folder_create_req, validate=True)

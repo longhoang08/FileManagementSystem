@@ -1,20 +1,16 @@
 # coding=utf-8
 import logging
 import os
-import datetime
-from file_management import repositories as repo
+
 from file_management import helpers
 from file_management.repositories.files import insert, utils
-from file_management.extensions.custom_exception import PermissionException, PathUploadNotFound
+from file_management.extensions.custom_exception import PathUploadNotFound
 from file_management.repositories.file import FileElasticRepo
 __author__ = 'Dang'
 _logger = logging.getLogger(__name__)
 
 
 def create_file_info(path_upload, user_id, parent_id, file_name, file_size, file_id, mime_type, tags, **kwargs):
-    modify_at = datetime.datetime.now()
-    has_thumbnail = helpers.is_has_thumbail(file_name)
-
     thumbnail_url = helpers.get_thumbnail_url(file_id, file_name, path_upload)
 
     insert.insert(file_id, file_name, file_size, parent_id,
@@ -39,8 +35,7 @@ def check_duplicate(file_name, parent_id):
 
 
 def write_file(fi, parent_id, user_id):
-    
-    folders = utils.get_ancestors(parent_id)
+    folders = utils.get_ancestors(str(user_id))
     path_upload = '/'.join(folders)
     if not os.path.exists(path_upload):
         os.makedirs(path_upload)
