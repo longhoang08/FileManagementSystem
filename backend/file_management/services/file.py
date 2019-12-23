@@ -1,6 +1,7 @@
 # coding=utf-8
 import logging
 import shutil
+import os
 from flask_jwt_extended import get_jwt_identity
 
 from file_management.helpers.check_role import check_insert_privilege
@@ -203,21 +204,22 @@ def copy_one_file(file_id, new_parent, user_id):
 
     folders = utils.get_ancestors(file_id)
     old_folder_path = '/'.join(folders[0:-1]) + '/'
+
+    new_folders = utils.get_ancestors(new_parent)
+    new_folder_path = '/'.join(new_folders) + '/'
     print(old_folder_path)
     new_id = generate_file_id(user_id)
     print("new id:", new_id)
-    shutil.copy(old_folder_path + file_id, old_folder_path + new_id)
+    if not os.path.exists(new_folder_path):
+        os.makedirs(new_folder_path)
+    shutil.copy(old_folder_path + file_id, new_folder_path + new_id)
     insert_new_copy_file(new_id, new_parent, file_id, same_folder)
     return True
 
 
 def insert_new_copy_file(new_id, new_parent, old_id, same_folder):
     data = files.utils.get_file(old_id)
-
-    if same_folder:
-        file_title = check_duplicate(data['file_title'], new_parent)
-    else:
-        file_title = data['file_title']
+    file_title = check_duplicate(data['file_title'], new_parent)
     files.insert.insert(new_id,
                         file_title,
                         data['size'],
