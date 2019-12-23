@@ -14,7 +14,7 @@ def get_role_of_user(user_id, file_id):
         cur_file = es.get_source(index=FILES_INDEX, id=cur_id)
         if (cur_file['owner'] == user_id):
             is_owner = True
-        if cur_file['share_mode'] == 1 and user_id in cur_file['children_id']:
+        if cur_file['share_mode'] == 1 and user_id in cur_file['users_shared']:
             viewable = True
             if cur_file['editable'] == True:
                 editable = True
