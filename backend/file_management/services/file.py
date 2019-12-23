@@ -16,7 +16,7 @@ from file_management.helpers.upload import generate_file_id
 
 __author__ = 'LongHB'
 
-from file_management.repositories.files.utils import get_file
+from file_management.repositories.files.utils import get_file, get_role_of_user
 
 from file_management.repositories.user import find_one_by_email
 from file_management.services.folder import create_folder
@@ -85,11 +85,13 @@ def move2trash(file_ids=None):
     deleting_file = [files.utils.get_file(file_id) for file_id in file_ids]
 
     for file in deleting_file:
+        file_id = file.get("file_id")
         if file.get('parent_id') != parent_of_first_file:
             raise DiffParentException("Can't move files which have different parents")
-        if file.get('owner') != user_id:
+        user_permission = get_role_of_user(user_id=user_id, file_id=file_id)
+        if not user_permission.get('is_owner'):
             raise PermissionException("You can't delete file of another user!")
-        if file.get("file_id") == user_id:
+        if file_id == user_id:
             raise PermissionException("You can't delete your home folder")
 
     for file_id in file_ids:
@@ -98,7 +100,6 @@ def move2trash(file_ids=None):
     return True
 
 
-@owner_privilege_required
 def move_one_file_to_trash(file_id):
     files.update.update(file_id, trashed=True)
 
