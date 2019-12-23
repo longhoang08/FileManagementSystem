@@ -26,10 +26,13 @@ class Notification(db.Model, TimestampMixin):
         return {
             'id': self.id,
             'viewed': self.viewed,
-            'owner': self.owner,
             'file_id': self.file_id,
             'file_title': file.get('file_title'),
             'file_type': file.get('file_type'),
-            'owner_avatar': owner.avatar_url,
+            'owner': {
+                'id': self.owner,
+                'avatar_url': owner.avatar_url,
+                'fullname': owner.fullname
+            },
             'created_at': datetime.timestamp(self.created_at),
         }
