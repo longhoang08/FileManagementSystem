@@ -26,10 +26,10 @@ class Download(flask_restplus.Resource):
             UPLOAD_DIRECTORY = pathconst.DOWNLOAD
             folders = utils.get_ancestors(file_id)
             file_path = '/'.join(folders)
-            true_name = services.file.search({"file_id": file_id, "user_id": 1})['result']['files'][0]["file_title"]
+            true_name = repositories.files.utils.get_file(file_id)["file_title"]
             return send_from_directory(UPLOAD_DIRECTORY, file_path, attachment_filename=true_name, as_attachment=True)
         except Exception as e:
-            _logger.log(e)
+            _logger.error(e)
             raise CannotDownloadFile()
 
 

@@ -77,9 +77,9 @@ def confirm_user_by_email(email):
 def fetch_user_status_by_email(email):
     from file_management.constant.user import Constant_user
     user = repositories.user.find_one_by_email(email)
-    if (not user):
+    if not user:
         return Constant_user.none_user
-    return user
+    return user.to_display_dict()
 
 
 def handle_in_active(user):

@@ -46,4 +46,6 @@ class User(db.Model, TimestampMixin):
             'email': self.email,
             'fullname': self.fullname,
             'avatar_url': self.avatar_url,
+            'is_admin': self.is_admin,
+            'is_actice': self.is_active
         }
