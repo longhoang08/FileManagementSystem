@@ -79,17 +79,29 @@ class FileElasticRepo(EsRepositoryInterface):
             if not args.get('user_id'):
                 must_conditions.append(query.Term(share_mode={'value': 2}))
             elif args.get('share'):
-                must_conditions.append(query.Bool(must=[
-                    query.Term(share_mode={'value': 1}),
-                    query.Term(users_shared={'value': args.get('user_id')})
-                ]))
+                must_conditions.append(self.shared_by_email_permission_condition(args))
+            elif args.get('file_id'):
+                must_conditions.append(query.Bool(should=[
+                    query.Term(owner=args.get('user_id')),
+                    self.shared_by_email_permission_condition(args),
+                    query.Term(share_mode={'value': 2}),
+                ],
+                    minimum_should_match=1
+                ))
             else:
                 must_conditions.append(query.Term(owner=args.get('user_id')))
+
         if args.get('star'):
             must_conditions.append(query.Term(star=True))
         if args.get('only_photo'):
             must_conditions.append(query.Prefix(file_type={'value': 'image'}))
         return query.Bool(must=must_conditions)
+
+    def shared_by_email_permission_condition(self, args):
+        return query.Bool(must=[
+            query.Term(share_mode={'value': 1}),
+            query.Term(users_shared={'value': args.get('user_id')})
+        ])
 
     def get_children_of_folder(self, folder_id):
         try:
@@ -135,8 +147,8 @@ class FileElasticRepo(EsRepositoryInterface):
         return file_es
 
     def add_page_limit_to_file_es(self, args, file_es):
-        _page = args.get('_page')
-        _limit = args.get('_limit')
+        _page = args.get('_page') if args.get('_page') else 1
+        _limit = args.get('_limit') if args.get('_limit') else 12
         file_es = file_es[(_page - 1) * _limit: _page * _limit]
         return file_es
 
