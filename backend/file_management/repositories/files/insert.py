@@ -4,7 +4,7 @@ from .update import update
 import datetime
 
 
-def insert(file_id, file_title, file_size, parent_id, user_id, mime_type, tags, thumbnail_url, starred=False,
+def insert(file_id, file_title, file_size, parent_id, user_id, mime_type, tags, thumbnail_url, starred=False, children_id=[],
            created_at=datetime.datetime.now().strftime("%d/%m/%Y %I:%M:%S %p"),
            updated_at=datetime.datetime.now().strftime("%d/%m/%Y %I:%M:%S %p")):
     document = {
