@@ -189,3 +189,16 @@ class FileElasticRepo(EsRepositoryInterface):
         print(json.dumps(file_es.to_dict()))
         responses = file_es.using(self.es).index(self._index).execute()
         return responses
+
+    def query_to_check_duplicate_when_upload_or_create(self, folder_id, name):
+        conditions = query.Bool(
+            filter=[
+                query.Term(parent_id={'value': folder_id}),
+                query.Term(file_title__raw={'value': name})
+            ]
+        )
+        file_es = Search() \
+            .query(conditions)
+        file_es = file_es[0:1]
+        responses = file_es.using(self.es).index(self._index).execute()
+        return responses
