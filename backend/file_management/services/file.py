@@ -215,17 +215,12 @@ def copy_one_file(file_id, new_parent, user_id):
                 {'parent_id': new_parent, "file_title": check_duplicate(file['file_title'], new_parent)})
             return True
 
-    folders = utils.get_ancestors(file_id)
-    old_folder_path = '/'.join(folders[0:-1]) + '/'
-
-    new_folders = utils.get_ancestors(new_parent)
-    new_folder_path = '/'.join(new_folders) + '/'
+    folders = utils.get_ancestors(str(user_id))
+    old_folder_path = '/'.join(folders) + '/'
     print(old_folder_path)
     new_id = generate_file_id(user_id)
     print("new id:", new_id)
-    if not os.path.exists(new_folder_path):
-        os.makedirs(new_folder_path)
-    shutil.copy(old_folder_path + file_id, new_folder_path + new_id)
+    shutil.copy(old_folder_path + file_id, old_folder_path + new_id)
     insert_new_copy_file(new_id, new_parent, file_id, same_folder)
     return True
 
