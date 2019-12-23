@@ -46,6 +46,9 @@ mappings = {
                 'no_tone': {
                     "type": "text",
                     "analyzer": "no_tone_analyzer"
+                },
+                "raw": {
+                    "type": "keyword"
                 }
             }
         },

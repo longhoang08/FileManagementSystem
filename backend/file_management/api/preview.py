@@ -23,9 +23,10 @@ class Get_preview(flask_restplus.Resource):
     def get(self, file_id):
         "Get docs, zip, image preview. return path to files image or json or pdf"
         viewable_check(file_id)
-        mime_type = repositories.files.utils.get_file(file_id)["file_type"]
-        folders = utils.get_ancestors(file_id)
-        file_path = '/'.join(folders)
+        data = repositories.files.utils.get_file(file_id)
+        mime_type = data["file_type"]
+        folders = utils.get_ancestors(data['owner'])
+        file_path = '/'.join(folders) + '/' + file_id
 
         if sum([x in mime_type for x in mime.image]):
             return send_file("../" + file_path, mimetype=mime_type)

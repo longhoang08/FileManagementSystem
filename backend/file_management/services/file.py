@@ -1,8 +1,10 @@
 # coding=utf-8
 import logging
 import shutil
+import os
 from flask_jwt_extended import get_jwt_identity
 
+from file_management import services
 from file_management.helpers.check_role import check_insert_privilege
 from file_management.extensions.custom_exception import UserNotFoundException, DiffParentException, \
     FileNotExistException, PermissionException
@@ -16,7 +18,7 @@ from file_management.helpers.upload import generate_file_id
 
 __author__ = 'LongHB'
 
-from file_management.repositories.files.utils import get_file, get_role_of_user
+from file_management.repositories.files.utils import get_file, get_role_of_user, get_descendants_of_list
 
 from file_management.repositories.user import find_one_by_email
 from file_management.services.folder import create_folder
@@ -51,6 +53,7 @@ def share(args):
     file = get_file(file_id)
     if not file:
         raise FileNotExistException()
+
     if (file['owner'] != args['user_id']):
         raise PermissionException("You are not the owner of this file/folder")
 
@@ -59,7 +62,21 @@ def share(args):
         return update.update(file_id, share_mode=share_mode, users_shared=[]).get('result')  # private
     elif args.get('emails'):
         share_mode = 1
-        users_shared = [str(find_one_by_email(mail).id) for mail in args['emails']]
+        users_shared = []
+        for email in args['emails']:
+            user_shared = find_one_by_email(email)
+            if not user_shared:
+                raise UserNotFoundException("User with email " + email + " not exist!!!")
+            users_shared.append(user_shared.id)
+        for user_id in users_shared:
+            from file_management.services.notification import create_notification
+            create_notification(
+                owner=int(args.get('user_id')),
+                viewd=False,
+                user_id=user_id,
+                file_id=file.get('file_id')
+            )
+        users_shared = [str(id) for id in users_shared]
         return update.update(file_id, share_mode=share_mode, users_shared=users_shared).get('result')  # custom
     elif args.get('share_by_link'):
         share_mode = 2
@@ -127,6 +144,18 @@ def drop_out(file_ids):
     """
     Drop away files from ES
     """
+    email = get_jwt_identity()
+    user_id = find_one_by_email(email).id
+    user_id = str(user_id)
+
+    for file_id in file_ids:
+        permission = get_role_of_user(user_id, file_id)
+        if not permission.get('is_owner'):
+            raise PermissionException("You can't delete this files since you are not their owner")
+        if file_id == user_id:
+            raise PermissionException("You can't delete your home folder")
+
+    file_ids = get_descendants_of_list(file_ids)
     for file_id in file_ids:
         files.delete.delete(file_id)
 
@@ -201,8 +230,8 @@ def copy_one_file(file_id, new_parent, user_id):
                 {'parent_id': new_parent, "file_title": check_duplicate(file['file_title'], new_parent)})
             return True
 
-    folders = utils.get_ancestors(file_id)
-    old_folder_path = '/'.join(folders[0:-1]) + '/'
+    folders = utils.get_ancestors(str(user_id))
+    old_folder_path = '/'.join(folders) + '/'
     print(old_folder_path)
     new_id = generate_file_id(user_id)
     print("new id:", new_id)
@@ -213,11 +242,7 @@ def copy_one_file(file_id, new_parent, user_id):
 
 def insert_new_copy_file(new_id, new_parent, old_id, same_folder):
     data = files.utils.get_file(old_id)
-
-    if same_folder:
-        file_title = check_duplicate(data['file_title'], new_parent)
-    else:
-        file_title = data['file_title']
+    file_title = check_duplicate(data['file_title'], new_parent)
     files.insert.insert(new_id,
                         file_title,
                         data['size'],
@@ -249,3 +274,18 @@ def move_one_file(file_id, new_parent):
 @edit_privilege_required
 def rename_file(file_id, new_name):
     files.update.update(file_id, file_title=new_name)
+
+
+@user_required
+def delete_all_file_in_trash():
+    email = get_email_in_jwt()
+    id = find_one_by_email(email).id
+    response = services.file.search({
+        "trash": True,
+        'user_id': str(id),
+        'basic_info': True,
+        '_page': 1,
+        '_limit': 10000
+    })
+    ids = [file.get('file_id') for file in response['result']['files']]
+    drop_out(ids)
