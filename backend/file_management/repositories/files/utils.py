@@ -64,6 +64,13 @@ def get_descendants(file_id):
     return descendants
 
 
+def get_descendants_of_list(file_ids):
+    descendants = set(file_ids)
+    for id in file_ids:
+        descendants.update(get_descendants(id))
+    return descendants
+
+
 def get_file(file_id):
     from file_management.repositories.files import es
     if es.exists(index=FILES_INDEX, id=file_id):
