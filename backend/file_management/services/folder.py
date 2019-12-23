@@ -5,10 +5,10 @@ from flask_jwt_extended import get_jwt_identity
 
 from file_management import helpers
 from file_management.extensions.custom_exception import UserNotFoundException, PermissionException, \
-    ParentFolderNotExistException
+    ParentFolderNotExistException, FolderNameUsed
 from file_management.helpers.check_role import user_required, get_email_in_jwt, viewable_check
 from file_management.helpers.transformer import add_user_name_to_files, extract_file_data_from_response
-from file_management.repositories.files import FileElasticRepo, insert
+from file_management.repositories.files import FileElasticRepo, insert, utils
 
 __author__ = 'LongHB'
 
@@ -55,6 +55,11 @@ def get_files_in_folders(childrent_id, args):
     response = file_es.search(args)
     return extract_file_data_from_response(response)
 
+def check_folder_duplicate(file_name, parent_id):
+    es = FileElasticRepo()
+    list_child = es.get_children_of_folder(parent_id)['children_id']
+    list_name = [utils.get_file(fileid)["file_title"] for fileid in list_child]
+    return file_name in list_name
 
 @user_required
 def create_folder(args):
@@ -68,6 +73,9 @@ def create_folder(args):
         raise UserNotFoundException()
     if not is_this_file_exists(parent_id):
         raise ParentFolderNotExistException()
+
+    if check_folder_duplicate(file_title, parent_id):
+        raise FolderNameUsed()
 
     file_id = helpers.generate_file_id(user_id)
 
