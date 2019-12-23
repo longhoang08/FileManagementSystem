@@ -82,3 +82,8 @@ rename_req = {
 user_details_req = {
     'ids': fields.List(fields.String, required=True)
 }
+
+copy_req = {
+    'file_ids': fields.List(fields.String, required=True, description='ID\'s File'),
+    'new_parent': fields.String(required=False, description='new parent id')
+}
