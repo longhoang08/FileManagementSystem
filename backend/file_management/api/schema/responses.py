@@ -9,7 +9,9 @@ user_res = {
     'fullname': fields.String(description='fullname of user'),
     'avatar_url': fields.String(description='avatar url of user'),
     'is_active': fields.Boolean(description='user is active or not'),
-    'is_admin': fields.Boolean(description='user is admin or not')
+    'is_admin': fields.Boolean(description='user is admin or not'),
+    'created_at': fields.DateTime(description='user created date'),
+    'updated_at': fields.DateTime(description='user updated date')
 }
 
 pending_register_res = {
