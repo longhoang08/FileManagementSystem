@@ -1,5 +1,6 @@
 # coding=utf-8
 import logging
+import os
 import flask_restplus
 from flask import send_from_directory, send_file
 from file_management import repositories, services
@@ -23,13 +24,16 @@ class Download(flask_restplus.Resource):
     def get(self, file_id):
         try:
             viewable_check(file_id)
+            data = repositories.files.utils.get_file(file_id)
+            true_name = data["file_title"]
+            owner = data['owner']
             UPLOAD_DIRECTORY = pathconst.DOWNLOAD
-            folders = utils.get_ancestors(file_id)
+            folders = utils.get_ancestors(owner)
             file_path = '/'.join(folders)
-            true_name = repositories.files.utils.get_file(file_id)["file_title"]
+            file_path = os.path.join(file_path, file_id)
             return send_from_directory(UPLOAD_DIRECTORY, file_path, attachment_filename=true_name, as_attachment=True)
         except Exception as e:
-            _logger.error(e)
+            return str(e)
             raise CannotDownloadFile()
 
 

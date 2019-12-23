@@ -144,3 +144,7 @@ class FolderNotExistException(HTTPException):
 class NotFolderException(HTTPException):
     def __init__(self, message="It is not folder", errors=None):
         super().__init__(code=404, message=message, errors=errors, custom_code='folder_type_err')
+
+class FolderNameUsed(HTTPException):
+    def __init__(self, message="This name has been used", errors=None):
+        super().__init__(code=403, message=message, errors=errors, custom_code='folder_name_used')
