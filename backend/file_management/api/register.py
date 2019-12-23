@@ -1,6 +1,6 @@
 # coding=utf-8
 import logging
-
+import os
 import flask_restplus
 from flask import request
 
@@ -8,7 +8,7 @@ from file_management import services
 from file_management.extensions import Namespace
 from file_management.helpers import decode_token
 from file_management.services.pending_register import send_confirm_email
-from file_management.repositories.files import insert
+from file_management.repositories.files import insert, utils
 
 # from file_management.api import requests, responses
 from . import requests, responses
@@ -47,4 +47,8 @@ class Confirm_email(flask_restplus.Resource):
         user_id = user_inf['user_id']
         # create home
         insert.insert(str(user_id), "home", 0, "0", str(user_id), "folder", "", "")
+        folders = utils.get_ancestors(str(user_id))
+        path_upload = '/'.join(folders)
+        if not os.path.exists(path_upload):
+            os.makedirs(path_upload)
         return user.to_display_dict()
