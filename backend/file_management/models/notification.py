@@ -12,7 +12,7 @@ class Notification(db.Model, TimestampMixin):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    viewd = db.Column(db.String(512), nullable=False)
+    viewed = db.Column(db.Boolean, nullable=False)
     owner = db.Column(db.Integer, nullable=False)
     file_id = db.Column(db.String(512), nullable=False)
 
@@ -25,7 +25,7 @@ class Notification(db.Model, TimestampMixin):
         owner = find_one_by_user_id(self.owner)
         return {
             'id': self.id,
-            'viewd': self.viewd,
+            'viewed': self.viewed,
             'owner': self.owner,
             'file_id': self.file_id,
             'file_title': file.get('file_title'),
