@@ -52,15 +52,38 @@ class FileElasticRepo(EsRepositoryInterface):
                     'query': search_text,
                     'boost': 10
                 }),
+                query.MatchPhrasePrefix(file_title__no_tone={
+                    'query': search_text,
+                    'boost': 10
+                }),
                 query.Match(file_title={
+                    'query': search_text,
+                    'boost': 4,
+                    'operator': 'or',
+                    'minimum_should_match': "3<75%"
+                }),
+                query.Match(file_title__no_tone={
                     'query': search_text,
                     'boost': 4,
                     'operator': 'and'
                 }),
+                query.Match(file_tag__text={
+                    'query': search_text,
+                    'boost': 2,
+                    'operator': 'or',
+                    'minimum_should_match': "3<75%"
+                }),
                 query.Match(description={
                     'query': search_text,
                     'boost': 1,
-                    'operator': 'or'
+                    'operator': 'or',
+                    'minimum_should_match': "3<75%"
+                }),
+                query.Match(description__no_tone={
+                    'query': search_text,
+                    'boost': 1,
+                    'operator': 'or',
+                    'minimum_should_match': "3<75%"
                 })
             ]))
         if not conditions:
@@ -80,6 +103,13 @@ class FileElasticRepo(EsRepositoryInterface):
                 must_conditions.append(query.Term(share_mode={'value': 2}))
             elif args.get('share'):
                 must_conditions.append(self.shared_by_email_permission_condition(args))
+            elif args.get('q'):
+                must_conditions.append(query.Bool(should=[
+                    query.Term(owner=args.get('user_id')),
+                    self.shared_by_email_permission_condition(args),
+                ],
+                    minimum_should_match=1
+                ))
             elif args.get('file_id'):
                 must_conditions.append(query.Bool(should=[
                     query.Term(owner=args.get('user_id')),
@@ -125,7 +155,7 @@ class FileElasticRepo(EsRepositoryInterface):
         )
         file_es = self.build_file_es(args, conditions)
         _logger.info("Elasticsearch query: " + str(json.dumps(file_es.to_dict())))
-        # print(str(json.dumps(file_es.to_dict())))
+        print(str(json.dumps(file_es.to_dict())))
         return file_es
 
     def build_file_es(self, args, search_condition):
