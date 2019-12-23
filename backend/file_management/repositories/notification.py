@@ -1,6 +1,8 @@
 # coding=utf-8
 import logging
 
+from sqlalchemy import desc
+
 _logger = logging.getLogger(__name__)
 
 from file_management import models as m
@@ -9,7 +11,7 @@ from file_management import models as m
 def get_all_notitfication(user_id):
     return m.Notification.query.filter(
         m.Notification.user_id == user_id
-    ).order_by(m.Notification.created_at).limit(10)
+    ).order_by(desc(m.Notification.created_at)).limit(10)
 
 
 def get_notifications_by_ids(ids, user_id):
