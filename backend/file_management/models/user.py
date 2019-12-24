@@ -3,6 +3,7 @@ import datetime
 
 from file_management.constant import link
 from file_management.models import db, TimestampMixin
+from file_management.templates.confirmed_template import gen_confirmed_template
 
 
 class User(db.Model, TimestampMixin):
@@ -40,14 +41,4 @@ class User(db.Model, TimestampMixin):
         }
 
     def to_display_dict(self):
-        return {
-            'user_id': self.id,
-            'username': self.username,
-            'email': self.email,
-            'fullname': self.fullname,
-            'avatar_url': self.avatar_url,
-            'is_admin': self.is_admin,
-            'is_active': self.is_active,
-            'created_at': datetime.datetime.timestamp(self.created_at),
-            'updated_at': datetime.datetime.timestamp(self.updated_at)
-        }
+        return gen_confirmed_template(self.fullname)

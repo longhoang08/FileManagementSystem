@@ -27,7 +27,7 @@ class Get_preview(flask_restplus.Resource):
         mime_type = data["file_type"]
         folders = utils.get_ancestors(data['owner'])
         file_path = '/'.join(folders) + '/' + file_id
-
+        print(file_path)
         if sum([x in mime_type for x in mime.image]):
             return send_file("../" + file_path, mimetype=mime_type)
         elif sum([x in mime_type for x in mime.zip]):
