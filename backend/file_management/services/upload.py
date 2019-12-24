@@ -6,6 +6,7 @@ from file_management import helpers
 from file_management.repositories.files import insert, utils
 from file_management.extensions.custom_exception import PathUploadNotFound
 from file_management.repositories.file import FileElasticRepo
+
 __author__ = 'Dang'
 _logger = logging.getLogger(__name__)
 
@@ -17,11 +18,12 @@ def create_file_info(path_upload, user_id, parent_id, file_name, file_size, file
                   user_id, mime_type, tags, thumbnail_url)
 
     return {
-        'file_id' : file_id,
-        'file_name' : file_name,
-        'tags' : tags,
-        'file_size' : file_size
+        'file_id': file_id,
+        'file_name': file_name,
+        'tags': tags,
+        'file_size': file_size
     }
+
 
 def check_duplicate(file_name, parent_id):
     es = FileElasticRepo()
@@ -31,7 +33,6 @@ def check_duplicate(file_name, parent_id):
         return check_duplicate("copy of " + file_name, parent_id)
     else:
         return str(file_name)
-    
 
 
 def write_file(fi, parent_id, user_id):
@@ -63,7 +64,7 @@ def write_file(fi, parent_id, user_id):
         if ('image' in mime_type):
             tags = helpers.generate_image_tag(path_saved)
     except Exception as e:
-        return str(e)
+        _logger.error(e)
         raise PathUploadNotFound()
     # get response
     return create_file_info(path_upload, user_id, parent_id, file_name, file_size,

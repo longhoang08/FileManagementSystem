@@ -104,23 +104,22 @@ class FileElasticRepo(EsRepositoryInterface):
             ] if not args.get('trash') else [query.Term(trashed=True)]
         ))
         if not args.get('is_folder_api'):
-            if not args.get('user_id'):
+            if args.get('file_id'):
+                must_conditions.append(query.Bool(should=[
+                    query.Term(owner=args.get('user_id')),
+                    self.shared_by_email_permission_condition(args),
+                    query.Term(share_mode={'value': 2}),
+                ],
+                    minimum_should_match=1
+                )),
+            elif not args.get('user_id'):
                 raise PermissionException("You must login to use this api")
-                # must_conditions.append(query.Term(share_mode={'value': 2}))
             elif args.get('share'):
                 must_conditions.append(self.shared_by_email_permission_condition(args))
             elif args.get('q'):
                 must_conditions.append(query.Bool(should=[
                     query.Term(owner=args.get('user_id')),
                     self.shared_by_email_permission_condition(args),
-                ],
-                    minimum_should_match=1
-                ))
-            elif args.get('file_id'):
-                must_conditions.append(query.Bool(should=[
-                    query.Term(owner=args.get('user_id')),
-                    self.shared_by_email_permission_condition(args),
-                    query.Term(share_mode={'value': 2}),
                 ],
                     minimum_should_match=1
                 ))
