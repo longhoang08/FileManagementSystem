@@ -5,7 +5,7 @@ import os
 from flask_jwt_extended import get_jwt_identity
 
 from file_management import services
-from file_management.helpers.check_role import check_insert_privilege
+from file_management.helpers.check_role import check_insert_privilege, viewable_check
 from file_management.extensions.custom_exception import UserNotFoundException, DiffParentException, \
     FileNotExistException, PermissionException
 from file_management.helpers.check_role import user_required, owner_privilege_required, get_email_in_jwt, \
@@ -33,6 +33,13 @@ def search(args):
         args['user_id'] = find_one_by_email(email).id
         if args.get('user_id'):
             args['user_id'] = str(args['user_id'])
+    file_id = args.get('file_id')
+    if file_id:
+        if isinstance(file_id, list):
+            for id in file_id:
+                viewable_check(id, error_message="You are not allowed to view this file/folder")
+        else:
+            viewable_check(file_id, error_message="You are not allowed to view this file/folder")
 
     file_es = FileElasticRepo()
 
