@@ -1,9 +1,9 @@
 from functools import wraps
 from flask_jwt_extended import verify_jwt_in_request, get_jwt_identity
 
-from file_management.extensions.custom_exception import PermissionException, UserNotFoundException
+from file_management.extensions.custom_exception import PermissionException, UserNotFoundException, FileDeletedException
 from file_management import models
-from file_management.repositories.files.utils import get_ancestors, get_role_of_user
+from file_management.repositories.files.utils import get_ancestors, get_role_of_user, get_role_of_user_not_trashed
 from file_management.repositories.user import find_one_by_email
 
 
@@ -61,7 +61,9 @@ def viewable_check(file_id, error_message='You are not allowed to view this file
     if email:
         user_id = find_one_by_email(email).id
         user_id = str(user_id) if user_id else user_id
-    permission = get_role_of_user(user_id, file_id)
+    permission = get_role_of_user_not_trashed(user_id, file_id)
+    if permission.get('trashed'):
+        raise FileDeletedException()
     if not permission['viewable']:
         raise PermissionException(error_message)
     return permission, {'user_id': user_id, 'email': email}
