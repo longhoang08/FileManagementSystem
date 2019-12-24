@@ -97,12 +97,14 @@ class FileElasticRepo(EsRepositoryInterface):
 
     def build_filter_condions(self, args):
         must_conditions = []
+        print("1 ", must_conditions)
         must_conditions.append(query.Bool(
             should=[
                 query.Term(trashed=False),
                 query.Bool(must_not=query.Exists(field="trashed"))
             ] if not args.get('trash') else [query.Term(trashed=True)]
         ))
+        print("2 ", must_conditions)
         if not args.get('is_folder_api'):
             if args.get('file_id'):
                 must_conditions.append(query.Bool(should=[
@@ -125,11 +127,12 @@ class FileElasticRepo(EsRepositoryInterface):
                 ))
             else:
                 must_conditions.append(query.Term(owner=args.get('user_id')))
-
+        print("3 ", must_conditions)
         if args.get('star'):
             must_conditions.append(query.Term(star=True))
         if args.get('only_photo'):
             must_conditions.append(query.Prefix(file_type={'value': 'image'}))
+        print("4 ", must_conditions)
         return query.Bool(must=must_conditions)
 
     def shared_by_email_permission_condition(self, args):
