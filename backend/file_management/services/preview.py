@@ -16,7 +16,7 @@ def get_zip_preview(file_id, path):
 
 def get_docs_preview(file_id, path):
     cache_path = pathconst.TEMP
-    manager = PreviewManager(cache_path, create_folder= True)
+    manager = PreviewManager(cache_path, create_folder = True)
     path_to_pdf_preview = manager.get_pdf_preview(file_path=path)
     return path_to_pdf_preview
 
