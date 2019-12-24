@@ -6,7 +6,7 @@ from elasticsearch_dsl import query, Search
 
 from config import FILES_INDEX
 from file_management import BadRequestException
-from file_management.extensions.custom_exception import NotFolderException, FolderNotExistException
+from file_management.extensions.custom_exception import NotFolderException, FolderNotExistException, PermissionException
 from file_management.models.file import mappings, settings
 from file_management.repositories.es_base import EsRepositoryInterface
 
@@ -60,30 +60,35 @@ class FileElasticRepo(EsRepositoryInterface):
                     'query': search_text,
                     'boost': 4,
                     'operator': 'or',
-                    'minimum_should_match': "3<75%"
+                    'minimum_should_match': "1<75%"
                 }),
                 query.Match(file_title__no_tone={
                     'query': search_text,
                     'boost': 4,
-                    'operator': 'and'
+                    'operator': 'or',
+                    'minimum_should_match': "1<75%"
                 }),
                 query.Match(file_tag__text={
                     'query': search_text,
                     'boost': 2,
                     'operator': 'or',
-                    'minimum_should_match': "3<75%"
+                    'minimum_should_match': "1<75%"
+                }),
+                query.MatchPhrasePrefix(file_tag__text={
+                    'query': search_text,
+                    'boost': 2
                 }),
                 query.Match(description={
                     'query': search_text,
                     'boost': 1,
                     'operator': 'or',
-                    'minimum_should_match': "3<75%"
+                    'minimum_should_match': "1<75%"
                 }),
                 query.Match(description__no_tone={
                     'query': search_text,
                     'boost': 1,
                     'operator': 'or',
-                    'minimum_should_match': "3<75%"
+                    'minimum_should_match': "1<75%"
                 })
             ]))
         if not conditions:
@@ -99,8 +104,15 @@ class FileElasticRepo(EsRepositoryInterface):
             ] if not args.get('trash') else [query.Term(trashed=True)]
         ))
         if not args.get('is_folder_api'):
-            if not args.get('user_id'):
-                must_conditions.append(query.Term(share_mode={'value': 2}))
+            if args.get('file_id'):
+                should_conditions = []
+                should_conditions.append(query.Term(share_mode={'value': 2}))
+                if args.get('user_id'):
+                    should_conditions.append(query.Term(owner=args.get('user_id')))
+                    should_conditions.append(self.shared_by_email_permission_condition(args))
+                must_conditions.append(query.Bool(should=should_conditions, minimum_should_match=1))
+            elif not args.get('user_id'):
+                raise PermissionException("You must login to use this api")
             elif args.get('share'):
                 must_conditions.append(self.shared_by_email_permission_condition(args))
             elif args.get('q'):
@@ -110,17 +122,8 @@ class FileElasticRepo(EsRepositoryInterface):
                 ],
                     minimum_should_match=1
                 ))
-            elif args.get('file_id'):
-                must_conditions.append(query.Bool(should=[
-                    query.Term(owner=args.get('user_id')),
-                    self.shared_by_email_permission_condition(args),
-                    query.Term(share_mode={'value': 2}),
-                ],
-                    minimum_should_match=1
-                ))
             else:
                 must_conditions.append(query.Term(owner=args.get('user_id')))
-
         if args.get('star'):
             must_conditions.append(query.Term(star=True))
         if args.get('only_photo'):

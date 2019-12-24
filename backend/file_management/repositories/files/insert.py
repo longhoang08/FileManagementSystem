@@ -4,9 +4,11 @@ from .update import update
 import datetime
 
 
-def insert(file_id, file_title, file_size, parent_id, user_id, mime_type, tags, thumbnail_url, starred=False, children_id=[],
-           created_at=datetime.datetime.now().strftime("%d/%m/%Y %I:%M:%S %p"),
-           updated_at=datetime.datetime.now().strftime("%d/%m/%Y %I:%M:%S %p")):
+def insert(file_id, file_title, file_size, parent_id, user_id, mime_type, tags, thumbnail_url, starred=False,
+           children_id=[], created_at=None, updated_at=None):
+    current = datetime.datetime.now().strftime("%d/%m/%Y %I:%M:%S %p")
+    created_at = current if not created_at else created_at
+    updated_at = current if not updated_at else updated_at
     document = {
         "file_id": file_id,
         "file_title": file_title,
@@ -16,7 +18,7 @@ def insert(file_id, file_title, file_size, parent_id, user_id, mime_type, tags, 
         "star": starred,
         "parent_id": parent_id,
         "thumbnail_url": thumbnail_url,
-        "children_id": [],
+        "children_id": children_id,
         "share_mode": 0,
         "editable": False,
         "users_shared": [],

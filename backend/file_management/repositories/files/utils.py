@@ -2,6 +2,47 @@ from config import FILES_INDEX
 from file_management.constant import pathconst
 
 
+def get_role_of_user_not_trashed(user_id, file_id):
+    from file_management.repositories.files import es
+    cur_id = file_id
+    if user_id:
+        user_id = str(user_id)
+    viewable = False
+    editable = False
+    is_owner = False
+    trashed = False
+    while es.exists(index=FILES_INDEX, id=cur_id):
+        cur_file = es.get_source(index=FILES_INDEX, id=cur_id)
+        if (cur_file['owner'] == user_id):
+            is_owner = True
+        if cur_file['share_mode'] == 1 and user_id in cur_file['users_shared']:
+            viewable = True
+            if cur_file['editable'] == True:
+                editable = True
+        if cur_file['share_mode'] == 2:
+            viewable = True
+        if cur_file.get('trashed'):
+            trashed = True
+            break
+        cur_id = cur_file['parent_id']
+    if is_owner:
+        viewable = True
+        editable = True
+    if trashed:
+        return {
+            'trashed': True,
+            'is_owner': False,
+            'viewable': False,
+            'editable': False,
+        }
+    return {
+        'trashed': False,
+        'is_owner': is_owner,
+        'viewable': viewable,
+        'editable': editable
+    }
+
+
 def get_role_of_user(user_id, file_id):
     from file_management.repositories.files import es
     cur_id = file_id
@@ -21,6 +62,7 @@ def get_role_of_user(user_id, file_id):
         if cur_file['share_mode'] == 2:
             viewable = True
         if is_owner: break
+
         cur_id = cur_file['parent_id']
     if is_owner:
         viewable = True
