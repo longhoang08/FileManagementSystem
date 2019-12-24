@@ -33,7 +33,9 @@ def search(args):
         args['user_id'] = find_one_by_email(email).id
         if args.get('user_id'):
             args['user_id'] = str(args['user_id'])
+
     file_es = FileElasticRepo()
+
     response = file_es.search(args)
     response = extract_file_data_from_response(response)
     add_user_name_to_files(response['result']['files'])
