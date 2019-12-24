@@ -6,7 +6,7 @@ from elasticsearch_dsl import query, Search
 
 from config import FILES_INDEX
 from file_management import BadRequestException
-from file_management.extensions.custom_exception import NotFolderException, FolderNotExistException
+from file_management.extensions.custom_exception import NotFolderException, FolderNotExistException, PermissionException
 from file_management.models.file import mappings, settings
 from file_management.repositories.es_base import EsRepositoryInterface
 
@@ -100,7 +100,8 @@ class FileElasticRepo(EsRepositoryInterface):
         ))
         if not args.get('is_folder_api'):
             if not args.get('user_id'):
-                must_conditions.append(query.Term(share_mode={'value': 2}))
+                raise PermissionException("You must login to use this api")
+                # must_conditions.append(query.Term(share_mode={'value': 2}))
             elif args.get('share'):
                 must_conditions.append(self.shared_by_email_permission_condition(args))
             elif args.get('q'):
