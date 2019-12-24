@@ -12,7 +12,7 @@ _logger = logging.getLogger(__name__)
 
 def search_users(username='', page=1, ipp=10):
     users = repositories.admin.search_users(username, page, ipp)
-    users_dict = [user.to_dict() for user in users]
+    users_dict = [user.to_display_dict() for user in users]
     return users_dict
 
 
@@ -21,7 +21,7 @@ def block_user(email):
     if user is None:
         raise UserNotFoundException()
     blocked_user = repositories.user.block_user(user)
-    return blocked_user.to_dict()
+    return blocked_user.to_display_dict()
 
 
 def un_block_user(email):
@@ -29,4 +29,4 @@ def un_block_user(email):
     if user is None:
         raise UserNotFoundException()
     un_blocked_user = repositories.user.un_block_user(user)
-    return un_blocked_user.to_dict()
+    return un_blocked_user.to_display_dict()
