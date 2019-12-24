@@ -1,5 +1,7 @@
 # FileManagementSystem
 
+![alt text](https://github.com/longhoang08/FileManagementSystem/maytinhdibo/screen.png)
+
 ## Frontend introduction
 https://github.com/maytinhdibo/uFile-frontend
 
