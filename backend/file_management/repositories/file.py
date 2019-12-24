@@ -60,30 +60,35 @@ class FileElasticRepo(EsRepositoryInterface):
                     'query': search_text,
                     'boost': 4,
                     'operator': 'or',
-                    'minimum_should_match': "3<75%"
+                    'minimum_should_match': "1<75%"
                 }),
                 query.Match(file_title__no_tone={
                     'query': search_text,
                     'boost': 4,
-                    'operator': 'and'
+                    'operator': 'or',
+                    'minimum_should_match': "1<75%"
                 }),
                 query.Match(file_tag__text={
                     'query': search_text,
                     'boost': 2,
                     'operator': 'or',
-                    'minimum_should_match': "3<75%"
+                    'minimum_should_match': "1<75%"
+                }),
+                query.MatchPhrasePrefix(file_tag__text={
+                    'query': search_text,
+                    'boost': 2
                 }),
                 query.Match(description={
                     'query': search_text,
                     'boost': 1,
                     'operator': 'or',
-                    'minimum_should_match': "3<75%"
+                    'minimum_should_match': "1<75%"
                 }),
                 query.Match(description__no_tone={
                     'query': search_text,
                     'boost': 1,
                     'operator': 'or',
-                    'minimum_should_match': "3<75%"
+                    'minimum_should_match': "1<75%"
                 })
             ]))
         if not conditions:
