@@ -2,7 +2,7 @@
 import logging
 import os
 import flask_restplus
-from flask import request
+from flask import request, redirect
 
 from file_management import services
 from file_management.extensions import Namespace
@@ -51,4 +51,4 @@ class Confirm_email(flask_restplus.Resource):
         path_upload = '/'.join(folders)
         if not os.path.exists(path_upload):
             os.makedirs(path_upload)
-        return user.to_display_dict()
+        return redirect("http://ufile.ml")
