@@ -1,6 +1,6 @@
 FROM python:3.6
 
-EXPOSE 5000
+EXPOSE 50000
 WORKDIR /code
 
 RUN apt-get update && apt-get install -y \
