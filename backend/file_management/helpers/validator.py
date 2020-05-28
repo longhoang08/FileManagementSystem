@@ -14,7 +14,7 @@ def validate_password(password):
 
 
 def validate_fullname(fullname):
-    return len(fullname) >= 8 and len(fullname) <= 100 and fullname.replace(' ', '').isalpha()
+    return len(fullname) >= 6 and len(fullname) <= 100 and fullname.replace(' ', '').isalpha()
 
 
 def validate_username(username):
