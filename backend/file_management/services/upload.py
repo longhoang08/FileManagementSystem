@@ -60,9 +60,9 @@ def write_file(fi, parent_id, user_id):
         file_size = os.stat(path_saved).st_size
         tags = ['']
 
-        # get tags if files is an image
-        if ('image' in mime_type):
-            tags = helpers.generate_image_tag(path_saved)
+        # # get tags if files is an image
+        # if ('image' in mime_type):
+        #     tags = helpers.generate_image_tag(path_saved)
     except Exception as e:
         _logger.error(e)
         raise PathUploadNotFound()
