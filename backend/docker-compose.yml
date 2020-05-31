@@ -47,7 +47,7 @@ services:
     command: celery -A proj file_management.celery.tasks.app -l info
 
   elasticsearch:
-    image: tekodevops/elasticsearch:7.3.1-icu-vni
+    image: tekodevops/elasticsearch:7.3.1-icu
     container_name: elasticsearch
     environment:
       - cluster.name=search-platform-etl
